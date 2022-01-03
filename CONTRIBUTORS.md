@@ -9,5 +9,6 @@ Add yourself as a contributor to this project as a Markdown link that links your
 
 ## Mentors
 - [Lauren Yu](https://github.com/laurenyz) 🐘
+- [Rudi P](https://github.com/rudidev08) 🦁
 
 ## Code of Conduct Contacts
