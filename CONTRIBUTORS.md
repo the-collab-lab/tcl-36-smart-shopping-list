@@ -9,6 +9,7 @@ Add yourself as a contributor to this project as a Markdown link that links your
 - [Shelley McHardy](https://github.com/shelleymcq) 🔥
 - [DJ Taylor](https://github.com/djtaylor8) ✨
 - [Lindsey Dinkel](https://github.com/lindseyindev) 😼
+- [Alena M](https://github.com/alenamedved) 🐻
 
 ## Mentors
 
