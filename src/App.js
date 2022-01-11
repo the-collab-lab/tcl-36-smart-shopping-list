@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from './lib/firebase';
 import './App.css';
 
 function App() {
-  const [click, setClick] = useState(false);
   const [text, setText] = useState('');
 
-  //updating state for the button
-  function handleClick(e) {
+  //handle submit for the form
+  const handleClick = async (e) => {
     e.preventDefault();
-    setClick(!click);
-  }
+
+    //create new doc reference for text input and save to firestore database
+    try {
+      const docRef = await addDoc(collection(db, 'items'), {
+        text,
+      });
+      console.log('Document written with ID: ', docRef.id);
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
+  };
+
   //updating state for the input box
   function handleChange(e) {
     setText(e.target.value);
