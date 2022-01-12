@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { collection, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from './lib/firebase';
 import './App.css';
 
 function App() {
+  //use text and setText for form inputs
   const [text, setText] = useState('');
+  //docs and setDocs will handle fetching items from firestore and displaying them in our div below
+  const [docs, setDocs] = useState([]);
+
+  //use effect enables the app to listen for changes to the database and updates the state accordingly
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'items'), (snapshot) => {
+      const snapshotDocs = [];
+      snapshot.forEach((doc) => snapshotDocs.push(doc.data()));
+      setDocs(snapshotDocs);
+    });
+    return () => {
+      //Used to remove the snapshot listener when the component is unmounted/unsubscribed
+      unsubscribe();
+    };
+  }, []);
 
   //handle submit for the form
   const handleClick = async (e) => {
@@ -15,6 +31,7 @@ function App() {
       const docRef = await addDoc(collection(db, 'items'), {
         text,
       });
+      setText('');
       console.log('Document written with ID: ', docRef.id);
     } catch (e) {
       console.error('Error adding document: ', e);
@@ -32,15 +49,18 @@ function App() {
         <form method="post">
           <input
             type="text"
-            placeholder="Enter Text"
-            name="text"
+            placeholder="New item"
+            name="item"
+            value={text}
             onChange={(e) => handleChange(e)}
           ></input>
           <button type="submit" onClick={(e) => handleClick(e)}>
             Click this button to send data!
           </button>
         </form>
-        <div>{text}</div>
+        {docs.map((doc) => (
+          <p>{doc.text}</p>
+        ))}
       </div>
     </div>
   );
