@@ -1,6 +1,6 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
-import AddItem from './components/AddItem';
+import { Routes, Route } from 'react-router-dom';
+import AddItemView from './components/AddItem';
 import ListView from './components/ListView';
 import Navigation from './components/Navigation';
 import Home from './components/Home';
@@ -12,7 +12,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="addItem" element={<AddItem />} />
+        <Route path="addItemView" element={<AddItemView />} />
         <Route path="listView" element={<ListView />} />
       </Routes>
 

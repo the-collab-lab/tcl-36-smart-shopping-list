@@ -5,7 +5,7 @@ export default function Navigation() {
   return (
     <nav>
       <NavLink
-        to="/addItem"
+        to="/addItemView"
         style={({ isActive }) => ({ fontWeight: isActive ? '800' : '' })}
       >
         Add an Item
