@@ -23,7 +23,7 @@ function App() {
   }, []);
 
   //handle submit for the form
-  const handleClick = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     //create new doc reference for text input and save to firestore database
@@ -42,7 +42,6 @@ function App() {
   function handleChange(e) {
     setText(e.target.value);
   }
-
   return (
     <div className="App">
       <div className="temp">
@@ -53,13 +52,13 @@ function App() {
             name="item"
             value={text}
             onChange={(e) => handleChange(e)}
-          ></input>
-          <button type="submit" onClick={(e) => handleClick(e)}>
+          />
+          <button type="submit" onClick={(e) => handleSubmit(e)}>
             Click this button to send data!
           </button>
         </form>
-        {docs.map((doc) => (
-          <p>{doc.text}</p>
+        {docs.map((doc, idx) => (
+          <div key={idx}>{doc.text}</div>
         ))}
       </div>
     </div>
