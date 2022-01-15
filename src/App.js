@@ -48,15 +48,6 @@ function App() {
   }
   return (
     <div>
-      <>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="addItemView" element={<AddItemView />} />
-          <Route path="listView" element={<ListView />} />
-        </Routes>
-
-        <Navigation />
-      </>
       <div className="App">
         <div>
           <form method="post">
@@ -76,6 +67,15 @@ function App() {
           ))}
         </div>
       </div>
+      <>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="addItemView" element={<AddItemView />} />
+          <Route path="listView" element={<ListView />} />
+        </Routes>
+
+        <Navigation />
+      </>
     </div>
   );
 }
