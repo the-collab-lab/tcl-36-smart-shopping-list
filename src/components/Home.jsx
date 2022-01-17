@@ -9,6 +9,7 @@ import { getToken } from '@the-collab-lab/shopping-list-utils';
 function Home() {
   const navigate = useNavigate();
 
+  //check for existing token and go to List View if it is there
   useEffect(() => {
     const checkToken = localStorage.getItem('list-token');
     if (checkToken) navigate('/listView');
@@ -17,6 +18,8 @@ function Home() {
   const handleNewList = async () => {
     const token = getToken();
     localStorage.setItem('list-token', token);
+
+    //add token to Firestore
     try {
       const docRef = await addDoc(collection(db, 'token'), {
         token,
