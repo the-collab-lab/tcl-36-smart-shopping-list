@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { collection, addDoc, onSnapshot } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 function AddItem() {
@@ -16,6 +16,7 @@ function AddItem() {
     try {
       const docRef = await addDoc(collection(db, 'items'), {
         //data points being sent to firebase, object format
+        //should we convert frequency to a number? or send in as a string?
         itemName: itemName,
         frequency: Number(frequency),
         purchasedDate: null,
@@ -31,15 +32,6 @@ function AddItem() {
       console.error('Error adding document: ', e);
     }
   };
-  //updating state for the input box
-  function handleChange(e) {
-    setItemName(e.target.value);
-  }
-
-  //tracks radio button value = frequency
-  function handleFrequencyChange(e) {
-    setFrequency(e.target.value);
-  }
 
   return (
     <div>
@@ -53,7 +45,7 @@ function AddItem() {
           id="itemName"
           name="itemName"
           value={itemName}
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => setItemName(e.target.value)}
         ></input>
         <fieldset>
           <legend>Choose how soon you will buy this again</legend>
@@ -62,7 +54,7 @@ function AddItem() {
             id="soon"
             name="frequency"
             value={7}
-            onChange={(e) => handleFrequencyChange(e)}
+            onChange={(e) => setFrequency(e.target.value)}
             defaultChecked
           ></input>
           <label htmlFor="soon">soon</label>
@@ -72,7 +64,7 @@ function AddItem() {
             id="kind of soon"
             name="frequency"
             value={14}
-            onChange={(e) => handleFrequencyChange(e)}
+            onChange={(e) => setFrequency(e.target.value)}
           ></input>
           <label htmlFor="kind of soon">kind of soon</label>
           <br></br>
@@ -81,7 +73,7 @@ function AddItem() {
             id="not soon"
             name="frequency"
             value={30}
-            onChange={(e) => handleFrequencyChange(e)}
+            onChange={(e) => setFrequency(e.target.value)}
           ></input>
           <label htmlFor="not soon">not soon</label>
           <br></br>
