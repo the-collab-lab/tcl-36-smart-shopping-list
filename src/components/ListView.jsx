@@ -21,16 +21,14 @@ function ListView() {
 
   return (
     <div>
-      List View
-      <div className="App">
-        <ul>
-          {items.map((item, idx) => (
-            <li
-              key={idx}
-            >{` Name: ${item.itemName}  Frequency: ${item.frequency}`}</li>
-          ))}
-        </ul>
-      </div>
+      Your Shopping List:
+      <ul>
+        {items.map((item, idx) => (
+          <li
+            key={idx}
+          >{` Name: ${item.itemName}  Frequency: ${item.frequency}`}</li>
+        ))}
+      </ul>
     </div>
   );
 }
