@@ -1,20 +1,40 @@
 import React, { useState } from 'react';
-
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+
+const radioButtonOptions = [
+  {
+    option: 'soon',
+    value: 7,
+    defaultChecked: true,
+  },
+  {
+    option: 'kind of soon',
+    value: 14,
+    defaultChecked: false,
+  },
+  {
+    option: 'not soon',
+    value: 30,
+    defaultChecked: false,
+  },
+];
 
 function AddItem() {
   const [itemName, setItemName] = useState('');
   const [frequency, setFrequency] = useState(7);
   const [notification, setNotification] = useState('');
 
+  //retrive the token from localStorage
+  const token = localStorage.getItem('list-token');
+
   //handle submit for the form
   const handleSubmit = async (e) => {
     e.preventDefault();
     //create new doc reference for text input and save to firestore database
-    //at later point will want to change collection(db, "items") to collecton(db, token) to send items to a specific collection separated by token names
+    //use a token to save new items into specific collection (shopping list)
     try {
-      const docRef = await addDoc(collection(db, 'items'), {
+      const docRef = await addDoc(collection(db, token), {
         //data points being sent to firebase, object format
         //should we convert frequency to a number? or send in as a string?
         itemName: itemName,
@@ -35,9 +55,9 @@ function AddItem() {
 
   return (
     <div>
-      <br></br>
+      <br />
       {notification}
-      <br></br>
+      <br />
       <form method="post">
         <label htmlFor="itemName">Item Name:</label>
         <input
@@ -47,38 +67,31 @@ function AddItem() {
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
         ></input>
+
         <fieldset>
           <legend>Choose how soon you will buy this again</legend>
-          <input
-            type="radio"
-            id="soon"
-            name="frequency"
-            value={7}
-            onChange={(e) => setFrequency(e.target.value)}
-            defaultChecked
-          ></input>
-          <label htmlFor="soon">soon</label>
-          <br></br>
-          <input
-            type="radio"
-            id="kind of soon"
-            name="frequency"
-            value={14}
-            onChange={(e) => setFrequency(e.target.value)}
-          ></input>
-          <label htmlFor="kind of soon">kind of soon</label>
-          <br></br>
-          <input
-            type="radio"
-            id="not soon"
-            name="frequency"
-            value={30}
-            onChange={(e) => setFrequency(e.target.value)}
-          ></input>
-          <label htmlFor="not soon">not soon</label>
-          <br></br>
+
+          {radioButtonOptions.map((radioBut, index) => (
+            <div key={index}>
+              <input
+                type="radio"
+                id={radioBut.option}
+                name="frequency"
+                value={radioBut.value}
+                onChange={(e) => setFrequency(e.target.value)}
+                defaultChecked={radioBut.defaultChecked}
+              ></input>
+              <label htmlFor={radioBut.option}>{radioBut.option}</label>
+              <br />
+            </div>
+          ))}
         </fieldset>
-        <button type="submit" onClick={(e) => handleSubmit(e)}>
+
+        <button
+          type="submit"
+          disabled={!itemName} //button is disabled until user input an item name
+          onClick={(e) => handleSubmit(e)}
+        >
           Add Item
         </button>
       </form>
