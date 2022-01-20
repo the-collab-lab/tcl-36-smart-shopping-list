@@ -13,7 +13,7 @@ function Home() {
   useEffect(() => {
     const checkToken = localStorage.getItem('list-token');
     if (checkToken) navigate('/listView');
-  });
+  }, [navigate]);
 
   const handleNewList = async () => {
     const token = getToken();
