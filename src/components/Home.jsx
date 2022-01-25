@@ -46,7 +46,7 @@ function Home() {
       navigate('/listView');
     } else {
       setNotification(
-        'the token does not exist. try again or create a new list',
+        'The token does not exist. try again or create a new list',
       );
       //setTimeout is used to clear the success notification after 2 seconds
       setTimeout(() => {
