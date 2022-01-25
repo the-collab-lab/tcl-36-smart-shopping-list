@@ -29,6 +29,8 @@ function AddItem() {
   //retrive the token from localStorage
   const token = localStorage.getItem('list-token');
 
+  //ERRORS: Handle submit needs a way to reject a form item, import list as prop? do list here?
+
   //handle submit for the form
   const handleSubmit = async (e) => {
     e.preventDefault();
