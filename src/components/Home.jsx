@@ -22,11 +22,12 @@ function Home() {
     const token = getToken();
     localStorage.setItem('list-token', token);
 
-    //add token to Firestore
+    //add token to Firestore under 'token' collection
     try {
       const docRef = await addDoc(collection(db, 'token'), {
         token,
       });
+
       navigate('/listView');
       console.log('Document written with ID: ', docRef.id);
     } catch (e) {
@@ -35,12 +36,15 @@ function Home() {
   };
 
   const handleTokenSubmit = async () => {
+    //create query for token collection in firestore
     const q = query(collection(db, 'token'), where('token', '==', userToken));
 
+    //set token in local storage if it exists
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       localStorage.setItem('list-token', doc.data().token);
     });
+
     const localToken = localStorage.getItem('list-token');
     if (localToken) {
       navigate('/listView');
@@ -48,24 +52,24 @@ function Home() {
       setNotification(
         'The token does not exist. try again or create a new list',
       );
-      //setTimeout is used to clear the success notification after 2 seconds
+      setUserToken('');
+      //setTimeout is used to clear the notification after 2 seconds
       setTimeout(() => {
         setNotification('');
       }, 2000);
-      console.log('this token does not exist...');
+      console.log(`'${userToken}' token does not exist...`);
     }
   };
 
   return (
     <div className="App">
-      <header className="App-header">
+      <main className="App-header">
         <p>Our Shopping App</p>
         <button onClick={() => handleNewList()}>Create New List</button>
         <div>
           <p>--Or--</p>
           <p>Join Existing List by Entering Three Word Token</p>
         </div>
-        {notification}
         <label htmlFor="userToken">List Token:</label>
         <input
           type="text"
@@ -79,9 +83,10 @@ function Home() {
           disabled={!userToken} //button is disabled until user input an item name
           onClick={(e) => handleTokenSubmit(e)}
         >
-          Add Item
+          Submit
         </button>
-      </header>
+        {notification}
+      </main>
     </div>
   );
 }

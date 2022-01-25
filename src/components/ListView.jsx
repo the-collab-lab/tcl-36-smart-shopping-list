@@ -5,10 +5,11 @@ import { db } from '../lib/firebase';
 
 function ListView() {
   const [items, setItems] = useState([]);
+  const listToken = localStorage.getItem('list-token');
 
   //use effect enables the app to listen for changes to the database and updates the state accordingly
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'items'), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, listToken), (snapshot) => {
       const snapshotDocs = [];
       snapshot.forEach((doc) => snapshotDocs.push(doc.data()));
       setItems(snapshotDocs);
