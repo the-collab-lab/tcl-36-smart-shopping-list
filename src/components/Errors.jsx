@@ -9,6 +9,7 @@ function Errors({ itemName }) {
   const [error, setError] = useState(null);
   //use effect enables the app to listen for changes to the database and updates the state accordingly
 
+  //useEffect to setList of items in that user's list
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, token), (snapshot) => {
       const snapshotDocs = [];
@@ -16,7 +17,6 @@ function Errors({ itemName }) {
       setList(snapshotDocs);
     });
     return () => {
-      //Used to remove the snapshot listener when the component is unmounted/unsubscribed
       unsubscribe();
     };
   }, [token]);
@@ -24,6 +24,7 @@ function Errors({ itemName }) {
   //items = array of objects
 
   //validation
+  //looping through the shopping list to access each individual item, normalize that item, then compare to the form input that is brought in as a prop
   list.forEach((listItem) => {
     listItem.itemName = listItem.itemName.toLowerCase();
     itemName = itemName.toLowerCase();
