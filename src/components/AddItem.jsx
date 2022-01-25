@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import Errors from './Errors';
 
 const radioButtonOptions = [
   {
@@ -55,6 +56,7 @@ function AddItem() {
 
   return (
     <div>
+      <Errors itemName={itemName} />
       <br />
       {notification}
       <br />
