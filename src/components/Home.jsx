@@ -65,10 +65,10 @@ function Home() {
     <div className="App">
       <main className="App-header">
         <p>Our Shopping App</p>
-        <button onClick={() => handleNewList()}>Create New List</button>
+        <button onClick={() => handleNewList()}>Create a New List</button>
         <div>
           <p>--Or--</p>
-          <p>Join Existing List by Entering Three Word Token</p>
+          <p>Join an Existing List by Entering Three Word Token</p>
         </div>
         <label htmlFor="userToken">List Token:</label>
         <input
@@ -83,7 +83,7 @@ function Home() {
           disabled={!userToken} //button is disabled until user input an item name
           onClick={(e) => handleTokenSubmit(e)}
         >
-          Submit
+          Join an existing list
         </button>
         {notification}
       </main>
