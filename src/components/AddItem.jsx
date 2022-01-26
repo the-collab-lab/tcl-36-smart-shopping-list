@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { collection, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import Errors from './Errors';
 
@@ -25,18 +25,50 @@ function AddItem() {
   const [itemName, setItemName] = useState('');
   const [frequency, setFrequency] = useState(7);
   const [notification, setNotification] = useState('');
-
-  //retrive the token from localStorage
+  const [list, setList] = useState([]);
   const token = localStorage.getItem('list-token');
+  const [error, setError] = useState(null);
+  //use effect enables the app to listen for changes to the database and updates the state accordingly
+
+  //useEffect to setList of items in that user's list
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, token), (snapshot) => {
+      const snapshotDocs = [];
+      snapshot.forEach((doc) => snapshotDocs.push(doc.data()));
+      setList(snapshotDocs);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [token]);
 
   //ERRORS: Handle submit needs a way to reject a form item, import list as prop? do list here?
+  function duplicateCheck(itemName, list) {
+    list.forEach((listItem) => {
+      listItem.itemName = listItem.itemName.toLowerCase();
+      itemName = itemName.toLowerCase();
+      //regex for removing punctuation from firebase item
+      listItem.itemName = listItem.itemName.replace(
+        /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
+        '',
+      );
+      //regex for removing spaces from firebase item
+      listItem.itemName = listItem.itemName.replace(/\s{2,}/g, ' ');
+      //regex repeated for form item
+      itemName = itemName.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+      itemName = itemName.replace(/\s{2,}/g, ' ');
+      console.log(listItem.itemName, itemName);
+      if (listItem.itemName === itemName && !error) {
+        return setError('This item already exists in your shopping list!');
+      }
+    });
+  }
 
-  //handle submit for the form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //create new doc reference for text input and save to firestore database
-    //use a token to save new items into specific collection (shopping list)
+    duplicateCheck(itemName, list);
     try {
+      if (error) throw error;
       const docRef = await addDoc(collection(db, token), {
         //data points being sent to firebase, object format
         //should we convert frequency to a number? or send in as a string?
@@ -47,18 +79,17 @@ function AddItem() {
       setNotification(`Successfully added ${itemName}`);
       setItemName('');
       console.log('Document written with ID: ', docRef.id);
-      //setTimeout is used to clear the success notification after 2 seconds
       setTimeout(() => {
         setNotification('');
       }, 2000);
-    } catch (e) {
-      console.error('Error adding document: ', e);
+    } catch (error) {
+      console.error('Error adding document: ', error);
     }
   };
 
   return (
     <div>
-      <Errors itemName={itemName} />
+      {error && <Errors error={error} />}
       <br />
       {notification}
       <br />
