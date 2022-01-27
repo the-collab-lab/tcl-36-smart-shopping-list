@@ -27,7 +27,7 @@ function AddItem() {
   const [notification, setNotification] = useState('');
   const [list, setList] = useState([]);
   const token = localStorage.getItem('list-token');
-  const [error, setError] = useState(null);
+  const [duplicateFound, setDuplicateFound] = useState(null);
   //use effect enables the app to listen for changes to the database and updates the state accordingly
 
   //useEffect to setList of items in that user's list
@@ -58,8 +58,10 @@ function AddItem() {
       itemName = itemName.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
       itemName = itemName.replace(/\s{2,}/g, ' ');
       console.log(listItem.itemName, itemName);
-      if (listItem.itemName === itemName && !error) {
-        return setError('This item already exists in your shopping list!');
+      if (listItem.itemName === itemName && !duplicateFound) {
+        setDuplicateFound('This item already exists in your shopping list!');
+      } else if (listItem.itemName !== itemName && duplicateFound) {
+        setDuplicateFound(null);
       }
     });
   }
@@ -67,8 +69,8 @@ function AddItem() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     duplicateCheck(itemName, list);
+    if (duplicateFound) return;
     try {
-      if (error) throw error;
       const docRef = await addDoc(collection(db, token), {
         //data points being sent to firebase, object format
         //should we convert frequency to a number? or send in as a string?
@@ -89,7 +91,7 @@ function AddItem() {
 
   return (
     <div>
-      {error && <Errors error={error} />}
+      {duplicateFound && <Errors error={duplicateFound} />}
       <br />
       {notification}
       <br />
