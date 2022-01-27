@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-
-function Errors({ duplicateMessage }) {
-  return <div>{<p className="error">Error: {duplicateMessage}</p>}</div>;
+function Errors({ message }) {
+  return <div>{<p className="error">Error: {message}</p>}</div>;
 }
 
 export default Errors;

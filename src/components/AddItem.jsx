@@ -91,7 +91,7 @@ function AddItem() {
 
   return (
     <div>
-      {duplicateMessage && <Errors duplicateMessage={duplicateMessage} />}
+      {duplicateMessage && <Errors message={duplicateMessage} />}
       <br />
       {notification}
       <br />
