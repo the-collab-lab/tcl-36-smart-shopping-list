@@ -76,7 +76,7 @@ function Home() {
           id="userToken"
           name="userToken"
           value={userToken}
-          onChange={(e) => setUserToken(e.target.value)}
+          onChange={(e) => setUserToken(e.target.value.toLowerCase())}
         ></input>
         <button
           type="submit"
