@@ -56,7 +56,7 @@ function Home() {
       //setTimeout is used to clear the notification after 2 seconds
       setTimeout(() => {
         setNotification('');
-      }, 2000);
+      }, 3000);
       console.log(`'${userToken}' token does not exist...`);
     }
   };
