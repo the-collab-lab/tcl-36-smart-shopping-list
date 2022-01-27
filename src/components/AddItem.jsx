@@ -26,14 +26,12 @@ function AddItem() {
   const [frequency, setFrequency] = useState(7);
   const [notification, setNotification] = useState('');
   const [list, setList] = useState([]);
-  const token = localStorage.getItem('list-token');
-  // TODO: rename to duplicateFoundMessage or such to indicate that it's used for UI, but not logic itself
-  const [duplicateFound, setDuplicateFound] = useState(null);
-  //use effect enables the app to listen for changes to the database and updates the state accordingly
+  const localToken = localStorage.getItem('list-token');
+  const [duplicateMessage, setDuplicateMessage] = useState(null);
 
-  //useEffect to setList of items in that user's list
+  //useEffect to setList of items in that user's list which will be used for duplicate comparison
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, token), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, localToken), (snapshot) => {
       const snapshotDocs = [];
       snapshot.forEach((doc) => snapshotDocs.push(doc.data()));
       setList(snapshotDocs);
@@ -41,28 +39,23 @@ function AddItem() {
     return () => {
       unsubscribe();
     };
-  }, [token]);
+  }, [localToken]);
 
-  //ERRORS: Handle submit needs a way to reject a form item, import list as prop? do list here?
   function duplicateCheck(itemName, list) {
     let isDuplicateFound = false;
     list.forEach((listItem) => {
       listItem.itemName = listItem.itemName.toLowerCase();
       itemName = itemName.toLowerCase();
-      //regex for removing punctuation from firebase item
+      //regex for removing punctuation and spaces from firebase item and form input item
       listItem.itemName = listItem.itemName.replace(
         /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
         '',
       );
-      //regex for removing spaces from firebase item
-      listItem.itemName = listItem.itemName.replace(/\s{2,}/g, ' ');
-      //regex repeated for form item
+      listItem.itemName = listItem.itemName.replace(/\s{2,}/g, '');
       itemName = itemName.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
-      itemName = itemName.replace(/\s{2,}/g, ' ');
-      console.log(listItem.itemName, itemName);
-
+      itemName = itemName.replace(/\s{2,}/g, '');
       if (listItem.itemName === itemName) {
-        isDuplicateFound = true;
+        return (isDuplicateFound = true);
       }
     });
     return isDuplicateFound;
@@ -71,29 +64,26 @@ function AddItem() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let isDuplicateFound = duplicateCheck(itemName, list);
-    console.log('isDuplicateFound' + isDuplicateFound);
     if (isDuplicateFound) {
-      // updates UI with duplicate check message
-      setDuplicateFound('error message goes here');
+      // sets Error message if duplicateCheck results in isDuplicateFound === true
+      // if isDuplicateFound returns, preventing item from being written to db
+      setDuplicateMessage(`${itemName} already exists in your list!`);
       return;
     } else {
-      setDuplicateFound();
+      setDuplicateMessage();
     }
-
     try {
-      const docRef = await addDoc(collection(db, token), {
-        //data points being sent to firebase, object format
-        //should we convert frequency to a number? or send in as a string?
+      const docRef = await addDoc(collection(db, localToken), {
         itemName: itemName,
         frequency: Number(frequency),
         purchasedDate: null,
       });
       setNotification(`Successfully added ${itemName}`);
       setItemName('');
-      console.log('Document written with ID: ', docRef.id);
+      console.log('Document written with ID: ', docRef.id, itemName);
       setTimeout(() => {
         setNotification('');
-      }, 2000);
+      }, 8000);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
@@ -101,7 +91,7 @@ function AddItem() {
 
   return (
     <div>
-      {duplicateFound && <Errors error={duplicateFound} />}
+      {duplicateMessage && <Errors duplicateMessage={duplicateMessage} />}
       <br />
       {notification}
       <br />
