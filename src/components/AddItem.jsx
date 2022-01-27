@@ -27,6 +27,7 @@ function AddItem() {
   const [notification, setNotification] = useState('');
   const [list, setList] = useState([]);
   const token = localStorage.getItem('list-token');
+  // TODO: rename to duplicateFoundMessage or such to indicate that it's used for UI, but not logic itself
   const [duplicateFound, setDuplicateFound] = useState(null);
   //use effect enables the app to listen for changes to the database and updates the state accordingly
 
@@ -44,6 +45,7 @@ function AddItem() {
 
   //ERRORS: Handle submit needs a way to reject a form item, import list as prop? do list here?
   function duplicateCheck(itemName, list) {
+    let isDuplicateFound = false;
     list.forEach((listItem) => {
       listItem.itemName = listItem.itemName.toLowerCase();
       itemName = itemName.toLowerCase();
@@ -58,18 +60,26 @@ function AddItem() {
       itemName = itemName.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
       itemName = itemName.replace(/\s{2,}/g, ' ');
       console.log(listItem.itemName, itemName);
-      if (listItem.itemName === itemName && !duplicateFound) {
-        setDuplicateFound('This item already exists in your shopping list!');
-      } else if (listItem.itemName !== itemName && duplicateFound) {
-        setDuplicateFound(null);
+
+      if (listItem.itemName === itemName) {
+        isDuplicateFound = true;
       }
     });
+    return isDuplicateFound;
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    duplicateCheck(itemName, list);
-    if (duplicateFound) return;
+    let isDuplicateFound = duplicateCheck(itemName, list);
+    console.log('isDuplicateFound' + isDuplicateFound);
+    if (isDuplicateFound) {
+      // updates UI with duplicate check message
+      setDuplicateFound('error message goes here');
+      return;
+    } else {
+      setDuplicateFound();
+    }
+
     try {
       const docRef = await addDoc(collection(db, token), {
         //data points being sent to firebase, object format
