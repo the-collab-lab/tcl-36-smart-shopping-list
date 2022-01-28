@@ -100,7 +100,7 @@ function AddItem() {
         <button
           type="submit"
           disabled={!itemName} //button is disabled until user input an item name
-          onClick={(e) => handleSubmit(e)}
+          onClick={handleSubmit}
         >
           Add Item
         </button>

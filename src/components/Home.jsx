@@ -5,10 +5,10 @@ import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 import { getToken } from '@the-collab-lab/shopping-list-utils';
+import toast, { Toaster } from 'react-hot-toast';
 
 function Home() {
   const [userToken, setUserToken] = useState('');
-  const [notification, setNotification] = useState('');
 
   const navigate = useNavigate();
 
@@ -27,7 +27,6 @@ function Home() {
       const docRef = await addDoc(collection(db, 'token'), {
         token,
       });
-
       navigate('/listView');
       console.log('Document written with ID: ', docRef.id);
     } catch (e) {
@@ -39,24 +38,15 @@ function Home() {
     //create query for token collection in firestore
     const q = query(collection(db, 'token'), where('token', '==', userToken));
 
-    //set token in local storage if it exists
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      localStorage.setItem('list-token', doc.data().token);
-    });
 
-    const localToken = localStorage.getItem('list-token');
-    if (localToken) {
+    //set token in local storage if it exists in firebase firestore
+    if (querySnapshot.docs.length) {
+      localStorage.setItem('list-token', userToken);
       navigate('/listView');
     } else {
-      setNotification(
-        'The token does not exist. try again or create a new list',
-      );
+      toast.error('The token does not exist. try again or create a new list');
       setUserToken('');
-      //setTimeout is used to clear the notification after 2 seconds
-      setTimeout(() => {
-        setNotification('');
-      }, 3000);
       console.log(`'${userToken}' token does not exist...`);
     }
   };
@@ -64,8 +54,9 @@ function Home() {
   return (
     <div className="App">
       <main className="App-header">
+        <Toaster />
         <p>Our Shopping App</p>
-        <button onClick={() => handleNewList()}>Create a New List</button>
+        <button onClick={handleNewList}>Create a New List</button>
         <div>
           <p>--Or--</p>
           <p>Join an Existing List by Entering Three Word Token</p>
@@ -81,11 +72,10 @@ function Home() {
         <button
           type="submit"
           disabled={!userToken} //button is disabled until user input an item name
-          onClick={(e) => handleTokenSubmit(e)}
+          onClick={handleTokenSubmit}
         >
           Join an existing list
         </button>
-        {notification}
       </main>
     </div>
   );
