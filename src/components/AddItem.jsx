@@ -26,8 +26,9 @@ function AddItem() {
   const [frequency, setFrequency] = useState(7);
   const [notification, setNotification] = useState('');
   const [list, setList] = useState([]);
-  const localToken = localStorage.getItem('list-token');
   const [duplicateMessage, setDuplicateMessage] = useState(null);
+
+  const localToken = localStorage.getItem('list-token');
 
   //useEffect to setList of items in that user's list which will be used for duplicate comparison
   useEffect(() => {
@@ -41,19 +42,30 @@ function AddItem() {
     };
   }, [localToken]);
 
+  //duplicate item? sets isDuplicateFound to true, otherwise false
+  //isDuplicateFound boolean gates form submission to database
   function duplicateCheck(itemName, list) {
     let isDuplicateFound = false;
     list.forEach((listItem) => {
       listItem.itemName = listItem.itemName.toLowerCase();
       itemName = itemName.toLowerCase();
-      //regex for removing punctuation and spaces from firebase item and form input item
-      listItem.itemName = listItem.itemName.replace(
-        /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
-        '',
-      );
-      listItem.itemName = listItem.itemName.replace(/\s{2,}/g, '');
-      itemName = itemName.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
-      itemName = itemName.replace(/\s{2,}/g, '');
+      //regex for removing punctuation and .split/.join to remove spaces from firebase item and form input item
+      listItem.itemName = listItem.itemName
+        .replace(/[^\w\s]|_/g, '')
+        .split(' ')
+        .join('');
+      listItem.itemName = listItem.itemName
+        .replace(/[^\w\s]|_/g, '')
+        .split(' ')
+        .join('');
+      itemName = itemName
+        .replace(/[^\w\s]|_/g, '')
+        .split(' ')
+        .join('');
+      itemName = itemName
+        .replace(/[^\w\s]|_/g, '')
+        .split(' ')
+        .join('');
       if (listItem.itemName === itemName) {
         return (isDuplicateFound = true);
       }
