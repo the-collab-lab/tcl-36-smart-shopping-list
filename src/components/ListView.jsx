@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function ListView() {
   const [items, setItems] = useState([]);
+
   const localToken = localStorage.getItem('list-token');
   const navigate = useNavigate();
   //use effect enables the app to listen for changes to the database and updates the state accordingly
