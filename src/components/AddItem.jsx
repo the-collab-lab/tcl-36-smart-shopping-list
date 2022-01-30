@@ -4,7 +4,6 @@ import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Errors from './Errors';
 
-
 const radioButtonOptions = [
   {
     option: 'soon',
@@ -30,7 +29,6 @@ function AddItem() {
   const [list, setList] = useState([]);
   const [duplicateMessage, setDuplicateMessage] = useState(null);
 
-
   const navigate = useNavigate();
 
   //retrive the token from localStorage
@@ -40,8 +38,8 @@ function AddItem() {
     if (!localToken) {
       navigate('/');
       return;
-
-  //useEffect to setList of items in that user's list which will be used for duplicate comparison
+    }
+    //useEffect to setList of items in that user's list which will be used for duplicate comparison
     const unsubscribe = onSnapshot(collection(db, localToken), (snapshot) => {
       const snapshotDocs = [];
       snapshot.forEach((doc) => snapshotDocs.push(doc.data()));
@@ -50,7 +48,7 @@ function AddItem() {
     return () => {
       unsubscribe();
     };
-  }, [localToken]);
+  }, [localToken, navigate]);
 
   //duplicate item? sets isDuplicateFound to true, otherwise false
   //isDuplicateFound boolean gates form submission to database
@@ -96,7 +94,6 @@ function AddItem() {
     }
     try {
       const docRef = await addDoc(collection(db, localToken), {
-
         //data points being sent to firebase, object format
         //should we convert frequency to a number? or send in as a string?
         itemName: itemName,
