@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
+import firebase from '../lib/firebase';
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Errors from './Errors';
@@ -21,6 +23,16 @@ const radioButtonOptions = [
     defaultChecked: false,
   },
 ];
+
+function removePunctuation(string) {
+  const punctuationlessString = string
+    .toLowerCase()
+    .replace(/[^\w\s]|_/g, '')
+    .split(' ')
+    .join('');
+
+  return punctuationlessString;
+}
 
 function AddItem() {
   const [itemName, setItemName] = useState('');
@@ -52,30 +64,35 @@ function AddItem() {
 
   //duplicate item? sets isDuplicateFound to true, otherwise false
   //isDuplicateFound boolean gates form submission to database
-  function duplicateCheck(itemName, list) {
+  function duplicateCheck(localToken, itemNameNormalized) {
     let isDuplicateFound = false;
-    list.forEach((listItem) => {
+
+    var ref = firebase.database().ref(localToken / itemNameNormalized);
+    ref.once('value').then(function (snapshot) {
+      var a = snapshot.exists(); // true
+      var b = snapshot.child('name').exists(); // true
+      var c = snapshot.child('name/first').exists(); // true
+      var d = snapshot.child('name/middle').exists(); // false
+      console.log(a);
+    });
+    /* list.forEach((listItem) => {
       listItem.itemName = listItem.itemName.toLowerCase();
       itemName = itemName.toLowerCase();
       //regex for removing punctuation and .split/.join to remove spaces from firebase item and form input item
-      listItem.itemName = listItem.itemName
-        .replace(/[^\w\s]|_/g, '')
-        .split(' ')
-        .join('');
-      itemName = itemName
-        .replace(/[^\w\s]|_/g, '')
-        .split(' ')
-        .join('');
+      listItem.itemName = removePunctuation(listItem.itemName);
+      itemName = removePunctuation(itemName);
+
       if (listItem.itemName === itemName) {
         return (isDuplicateFound = true);
-      }
-    });
+      } */
+
     return isDuplicateFound;
   }
+  const itemNameNormalized = removePunctuation(itemName);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let isDuplicateFound = duplicateCheck(itemName, list);
+    let isDuplicateFound = duplicateCheck(localToken, itemNameNormalized);
     if (isDuplicateFound) {
       // sets Error message if duplicateCheck results in isDuplicateFound === true
       // if isDuplicateFound returns, preventing item from being written to db
@@ -85,16 +102,16 @@ function AddItem() {
       setDuplicateMessage();
     }
     try {
-      const docRef = await addDoc(collection(db, localToken), {
-        //data points being sent to firebase, object format
-        //should we convert frequency to a number? or send in as a string?
+      // Add a new document in collection under item name normilized (use it as unic id)
+      await setDoc(doc(db, localToken, itemNameNormalized), {
         itemName: itemName,
         frequency: Number(frequency),
         purchasedDate: null,
       });
+
       setNotification(`Successfully added ${itemName}`);
       setItemName('');
-      console.log('Document written with ID: ', docRef.id, itemName);
+      console.log('Document written with ID: ', itemNameNormalized, itemName);
       setTimeout(() => {
         setNotification('');
       }, 8000);

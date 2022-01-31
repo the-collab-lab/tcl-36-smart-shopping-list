@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function ListView() {
   const [items, setItems] = useState([]);
+  const [purchasedDate, setPurchasedDate] = useState();
 
   const localToken = localStorage.getItem('list-token');
   const navigate = useNavigate();
@@ -26,14 +27,24 @@ function ListView() {
     };
   }, []);
 
+  const handleCheckboxChange = () => {
+    const datePurchased = Date.now();
+    console.log(datePurchased);
+  };
+  console.log(items);
   return (
     <div>
       Your Shopping List:
       <ul>
         {items.map((item, idx) => (
-          <li
-            key={idx}
-          >{` Name: ${item.itemName}  Frequency: ${item.frequency}`}</li>
+          <li key={idx}>
+            <input
+              type="checkbox"
+              onChange={() => handleCheckboxChange()}
+              label={item.itemName}
+            />{' '}
+            {` ${item.itemName} `}
+          </li>
         ))}
       </ul>
     </div>
