@@ -62,14 +62,6 @@ function AddItem() {
         .replace(/[^\w\s]|_/g, '')
         .split(' ')
         .join('');
-      listItem.itemName = listItem.itemName
-        .replace(/[^\w\s]|_/g, '')
-        .split(' ')
-        .join('');
-      itemName = itemName
-        .replace(/[^\w\s]|_/g, '')
-        .split(' ')
-        .join('');
       itemName = itemName
         .replace(/[^\w\s]|_/g, '')
         .split(' ')
