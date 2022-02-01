@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { doc, setDoc } from 'firebase/firestore';
-import firebase from '../lib/firebase';
+import { getDoc, doc, setDoc } from 'firebase/firestore';
+
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Errors from './Errors';
@@ -34,75 +33,59 @@ function removePunctuation(string) {
   return punctuationlessString;
 }
 
+//duplicate item? sets isDuplicateFound to true, otherwise false
+//isDuplicateFound boolean gates form submission to database
+async function duplicateCheck(localToken, itemNameNormalized) {
+  let isDuplicateFound = false;
+  //create a reference to the item in firestore inside localToken collection
+  const itemRef = doc(db, localToken, itemNameNormalized);
+  //send request to get the item
+  const docSnap = await getDoc(itemRef);
+  if (docSnap.exists()) {
+    //if the item found in the collection .exists() method returns 'true'
+    return (isDuplicateFound = true);
+  }
+  return isDuplicateFound;
+}
+
 function AddItem() {
   const [itemName, setItemName] = useState('');
   const [frequency, setFrequency] = useState(7);
   const [notification, setNotification] = useState('');
-  const [list, setList] = useState([]);
+
   const [duplicateMessage, setDuplicateMessage] = useState(null);
 
   const navigate = useNavigate();
 
   //retrive the token from localStorage
   const localToken = localStorage.getItem('list-token');
+  //save normalized users input to use as an unique key
+  const itemNameNormalized = removePunctuation(itemName);
 
   useEffect(() => {
     if (!localToken) {
       navigate('/');
       return;
     }
-    //useEffect to setList of items in that user's list which will be used for duplicate comparison
-    const unsubscribe = onSnapshot(collection(db, localToken), (snapshot) => {
-      const snapshotDocs = [];
-      snapshot.forEach((doc) => snapshotDocs.push(doc.data()));
-      setList(snapshotDocs);
-    });
-    return () => {
-      unsubscribe();
-    };
   }, [localToken, navigate]);
-
-  //duplicate item? sets isDuplicateFound to true, otherwise false
-  //isDuplicateFound boolean gates form submission to database
-  function duplicateCheck(localToken, itemNameNormalized) {
-    let isDuplicateFound = false;
-
-    var ref = firebase.database().ref(localToken / itemNameNormalized);
-    ref.once('value').then(function (snapshot) {
-      var a = snapshot.exists(); // true
-      var b = snapshot.child('name').exists(); // true
-      var c = snapshot.child('name/first').exists(); // true
-      var d = snapshot.child('name/middle').exists(); // false
-      console.log(a);
-    });
-    /* list.forEach((listItem) => {
-      listItem.itemName = listItem.itemName.toLowerCase();
-      itemName = itemName.toLowerCase();
-      //regex for removing punctuation and .split/.join to remove spaces from firebase item and form input item
-      listItem.itemName = removePunctuation(listItem.itemName);
-      itemName = removePunctuation(itemName);
-
-      if (listItem.itemName === itemName) {
-        return (isDuplicateFound = true);
-      } */
-
-    return isDuplicateFound;
-  }
-  const itemNameNormalized = removePunctuation(itemName);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let isDuplicateFound = duplicateCheck(localToken, itemNameNormalized);
+    const isDuplicateFound = await duplicateCheck(
+      localToken,
+      itemNameNormalized,
+    );
+
     if (isDuplicateFound) {
       // sets Error message if duplicateCheck results in isDuplicateFound === true
       // if isDuplicateFound returns, preventing item from being written to db
-      setDuplicateMessage(`${itemName} already exists in your list!`);
+      setDuplicateMessage(
+        `${itemNameNormalized} already exists in your list under the name ${itemName}!`,
+      );
       return;
-    } else {
-      setDuplicateMessage();
     }
     try {
-      // Add a new document in collection under item name normilized (use it as unic id)
+      // Add a new document/item in collection/localToken under normilized item name  (use it as unique id)
       await setDoc(doc(db, localToken, itemNameNormalized), {
         itemName: itemName,
         frequency: Number(frequency),
