@@ -29,16 +29,21 @@ function ListView() {
 
   return (
     <div className="m-20">
-      <h1 className="text-center text-2xl my-12">Your Shopping List:</h1>
-      <ul className="grid grid-cols-2 justify-around">
-        {items.map((item, idx) => (
-          <li className="flex flex-col my-4" key={idx}>
-            <div>{` Item Name: ${item.itemName}`}</div>
-            <div>{` Frequency: ${item.frequency}`}</div>
-          </li>
-        ))}
-      </ul>
-      <Welcome items={items} />
+      {items.length ? (
+        <Welcome items={items} />
+      ) : (
+        <div>
+          <h1 className="text-center text-2xl my-12">Your Shopping List:</h1>
+          <ul className="grid grid-cols-2 justify-around">
+            {items.map((item, idx) => (
+              <li className="flex flex-col my-4" key={idx}>
+                <div>{` Item Name: ${item.itemName}`}</div>
+                <div>{` Frequency: ${item.frequency}`}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
