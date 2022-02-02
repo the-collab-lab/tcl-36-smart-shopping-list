@@ -28,14 +28,20 @@ function ListView() {
 
   return (
     <div>
-      Your Shopping List:
-      <ul>
-        {items.map((item, idx) => (
-          <li
-            key={idx}
-          >{` Name: ${item.itemName}  Frequency: ${item.frequency}`}</li>
-        ))}
-      </ul>
+      {!items.length ? (
+        <>
+          <p>Your shopping list is currently empty.</p>
+          <button>Add Item</button>
+        </>
+      ) : (
+        <ul>
+          {items.map((item, idx) => (
+            <li
+              key={idx}
+            >{` Name: ${item.itemName}  Frequency: ${item.frequency}`}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
