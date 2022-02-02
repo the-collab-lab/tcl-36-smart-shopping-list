@@ -29,7 +29,7 @@ function ListView() {
 
   return (
     <div className="m-20">
-      {items.length ? (
+      {!items.length ? (
         <Welcome items={items} />
       ) : (
         <div>
