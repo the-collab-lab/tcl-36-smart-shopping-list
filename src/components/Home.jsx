@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-
 import { getToken } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -52,7 +50,7 @@ function Home() {
   };
 
   return (
-    <div className="App bg-gradient-to-t from-yellow-600 to-orange-600 via-yellow-600">
+    <div className="App">
       <main className="App-header">
         <Toaster />
         <p>Our Shopping App</p>

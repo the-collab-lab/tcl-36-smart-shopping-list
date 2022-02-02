@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
+import Welcome from './Welcome';
 
 function ListView() {
   const [items, setItems] = useState([]);
@@ -27,15 +28,17 @@ function ListView() {
   }, []);
 
   return (
-    <div>
-      Your Shopping List:
-      <ul>
+    <div className="m-20">
+      <h1 className="text-center text-2xl my-12">Your Shopping List:</h1>
+      <ul className="grid grid-cols-2 justify-around">
         {items.map((item, idx) => (
-          <li
-            key={idx}
-          >{` Name: ${item.itemName}  Frequency: ${item.frequency}`}</li>
+          <li className="flex flex-col my-4" key={idx}>
+            <div>{` Item Name: ${item.itemName}`}</div>
+            <div>{` Frequency: ${item.frequency}`}</div>
+          </li>
         ))}
       </ul>
+      <Welcome items={items} />
     </div>
   );
 }
