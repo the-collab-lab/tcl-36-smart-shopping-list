@@ -25,7 +25,7 @@ function ListView() {
       //Used to remove the snapshot listener when the component is unmounted/unsubscribed
       unsubscribe();
     };
-  }, []);
+  }, [localToken, navigate]);
 
   return (
     <div className="m-20">
