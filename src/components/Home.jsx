@@ -52,7 +52,7 @@ function Home() {
   };
 
   return (
-    <div className="App">
+    <div className="App bg-gradient-to-t from-yellow-600 to-orange-600 via-yellow-600">
       <main className="App-header">
         <Toaster />
         <p>Our Shopping App</p>
