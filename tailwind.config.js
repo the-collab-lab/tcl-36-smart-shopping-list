@@ -9,6 +9,7 @@ module.exports = {
         Staatliches: ['Staatliches', 'sans-serif'],
         Exo: ['Exo', 'sans-serif'],
         Inconsolata: ['Inconsolata', 'sans-serif'],
+        Karma: ['Karma', 'sans-serif'],
       },
       colors: {
         stone: colors.stone,
@@ -24,6 +25,7 @@ module.exports = {
         green: colors.green,
         gray: colors.gray,
         yellow: colors.yellow,
+        mostlyBlack: '#080404',
       },
     },
   },
