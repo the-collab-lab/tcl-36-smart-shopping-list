@@ -7,16 +7,13 @@ import { useNavigate } from 'react-router-dom';
 //we need an advice how we can pass a field name as a varible
 //so we can reuse this function to update any field in fireBase
 
-/* const setUpdateToDb = async (localToken, itemId, field, dataToUpdate) => {
-  const itemRef = doc(db, localToken, itemId);
-  await setDoc(
-    itemRef,
-    {
-      field: dataToUpdate,
-    },
-    { merge: true },
-    );
-  }; */
+const setUpdateToDb = async (collection, itemId, field, dataToUpdate) => {
+  const itemRef = doc(db, collection, itemId);
+  const fieldSet = {};
+  fieldSet[field] = dataToUpdate;
+
+  await setDoc(itemRef, fieldSet, { merge: true });
+};
 
 function ListView() {
   const [items, setItems] = useState([]);
@@ -49,26 +46,13 @@ function ListView() {
   //
   const handleCheckboxChange = async (e) => {
     const itemId = e.target.name;
-    const itemRef = doc(db, localToken, itemId);
     //create time variable to save time when user checked the box as purchasedTime
     const datePurchased = Date.now();
     //if user want to uncheck the item it can be done and purchasedDate is set to null again
     if (e.target.checked) {
-      await setDoc(
-        itemRef,
-        {
-          purchasedDate: datePurchased,
-        },
-        { merge: true },
-      );
+      setUpdateToDb(localToken, itemId, 'purchasedDate', datePurchased);
     } else {
-      await setDoc(
-        itemRef,
-        {
-          purchasedDate: null,
-        },
-        { merge: true },
-      );
+      setUpdateToDb(localToken, itemId, 'purchasedDate', null);
     }
   };
 
@@ -94,7 +78,7 @@ function ListView() {
               checked={within24hours(item.purchasedDate)}
               onChange={(e) => handleCheckboxChange(e)}
               name={item.id}
-              aria-label="item" //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
+              aria-label="purchased" //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
             />{' '}
             {` ${item.itemName} `}
           </li>
