@@ -4,9 +4,7 @@ import { collection, onSnapshot, setDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 
-//we need an advice how we can pass a field name as a varible
-//so we can reuse this function to update any field in fireBase
-
+//reusable function to send updates to db
 const setUpdateToDb = async (collection, itemId, field, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
   const fieldSet = {};
