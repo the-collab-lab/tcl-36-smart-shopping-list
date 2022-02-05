@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Welcome({ items }) {
-  //if(!items){
+function Welcome() {
   return (
     <div>
       <h1 className="font-Karma text-black text-center text-4xl my-4">
@@ -18,8 +17,6 @@ function Welcome({ items }) {
       </div>
     </div>
   );
-  //}
-  //return null
 }
 
 export default Welcome;
