@@ -11,17 +11,15 @@ import './App.css';
 function App() {
   return (
     <div>
-      <>
-        <Header />
-        <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/" element={<Navigate replace to={'/home'} />} />
-          <Route path="addItemView" element={<AddItemView />} />
-          <Route path="listView" element={<ListView />} />
-        </Routes>
+      <Header />
+      <Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Navigate replace to={'/home'} />} />
+        <Route path="addItemView" element={<AddItemView />} />
+        <Route path="listView" element={<ListView />} />
+      </Routes>
 
-        <Navigation />
-      </>
+      <Navigation />
     </div>
   );
 }
