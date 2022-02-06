@@ -18,7 +18,6 @@ function App() {
         <Route path="addItemView" element={<AddItemView />} />
         <Route path="listView" element={<ListView />} />
       </Routes>
-
       <Navigation />
     </div>
   );

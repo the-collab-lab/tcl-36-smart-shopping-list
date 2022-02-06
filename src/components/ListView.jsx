@@ -37,7 +37,7 @@ function ListView() {
     return (
       <div className="m-20">
         {!items.length ? (
-          <Welcome items={items} />
+          <Welcome />
         ) : (
           <div>
             <h1 className="text-center text-2xl my-12">Your Shopping List:</h1>
