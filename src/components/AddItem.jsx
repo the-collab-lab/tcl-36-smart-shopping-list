@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, onSnapshot } from 'firebase/firestore';
+import { getDoc, doc, setDoc } from 'firebase/firestore';
+
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Errors from './Errors';
@@ -22,79 +23,78 @@ const radioButtonOptions = [
   },
 ];
 
+function removePunctuation(string) {
+  const punctuationlessString = string
+    .toLowerCase()
+    .replace(/[^\w\s]|_/g, '')
+    .split(' ')
+    .join('');
+
+  return punctuationlessString;
+}
+
+//duplicate item? sets isDuplicateFound to true, otherwise false
+//isDuplicateFound boolean gates form submission to database
+async function duplicateCheck(localToken, itemNameNormalized) {
+  let isDuplicateFound = false;
+  //create a reference to the item in firestore inside localToken collection
+  const itemRef = doc(db, localToken, itemNameNormalized);
+  //send request to get the item
+  const docSnap = await getDoc(itemRef);
+  if (docSnap.exists()) {
+    //if the item found in the collection .exists() method returns 'true'
+    return (isDuplicateFound = true);
+  }
+  return isDuplicateFound;
+}
+
 function AddItem() {
   const [itemName, setItemName] = useState('');
   const [frequency, setFrequency] = useState(7);
   const [notification, setNotification] = useState('');
-  const [list, setList] = useState([]);
+
   const [duplicateMessage, setDuplicateMessage] = useState(null);
 
   const navigate = useNavigate();
 
   //retrive the token from localStorage
   const localToken = localStorage.getItem('list-token');
+  //save normalized users input to use as an unique key
+  const itemNameNormalized = removePunctuation(itemName);
 
   useEffect(() => {
     if (!localToken) {
       navigate('/');
       return;
     }
-    //useEffect to setList of items in that user's list which will be used for duplicate comparison
-    const unsubscribe = onSnapshot(collection(db, localToken), (snapshot) => {
-      const snapshotDocs = [];
-      snapshot.forEach((doc) => snapshotDocs.push(doc.data()));
-      setList(snapshotDocs);
-    });
-    return () => {
-      unsubscribe();
-    };
   }, [localToken, navigate]);
-
-  //duplicate item? sets isDuplicateFound to true, otherwise false
-  //isDuplicateFound boolean gates form submission to database
-  function duplicateCheck(itemName, list) {
-    let isDuplicateFound = false;
-    list.forEach((listItem) => {
-      listItem.itemName = listItem.itemName.toLowerCase();
-      itemName = itemName.toLowerCase();
-      //regex for removing punctuation and .split/.join to remove spaces from firebase item and form input item
-      listItem.itemName = listItem.itemName
-        .replace(/[^\w\s]|_/g, '')
-        .split(' ')
-        .join('');
-      itemName = itemName
-        .replace(/[^\w\s]|_/g, '')
-        .split(' ')
-        .join('');
-      if (listItem.itemName === itemName) {
-        return (isDuplicateFound = true);
-      }
-    });
-    return isDuplicateFound;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let isDuplicateFound = duplicateCheck(itemName, list);
+    const isDuplicateFound = await duplicateCheck(
+      localToken,
+      itemNameNormalized,
+    );
+
     if (isDuplicateFound) {
       // sets Error message if duplicateCheck results in isDuplicateFound === true
       // if isDuplicateFound returns, preventing item from being written to db
-      setDuplicateMessage(`${itemName} already exists in your list!`);
+      setDuplicateMessage(
+        `${itemNameNormalized} already exists in your list under the name ${itemName}!`,
+      );
       return;
-    } else {
-      setDuplicateMessage();
     }
     try {
-      const docRef = await addDoc(collection(db, localToken), {
-        //data points being sent to firebase, object format
-        //should we convert frequency to a number? or send in as a string?
+      // Add a new document/item in collection/localToken under normilized item name  (use it as unique id)
+      await setDoc(doc(db, localToken, itemNameNormalized), {
         itemName: itemName,
         frequency: Number(frequency),
         purchasedDate: null,
       });
+
       setNotification(`Successfully added ${itemName}`);
       setItemName('');
-      console.log('Document written with ID: ', docRef.id, itemName);
+      console.log('Document written with ID: ', itemNameNormalized, itemName);
       setTimeout(() => {
         setNotification('');
       }, 8000);
