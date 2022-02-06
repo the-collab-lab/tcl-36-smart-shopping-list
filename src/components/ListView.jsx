@@ -60,7 +60,6 @@ function ListView() {
     const gap = currentTime - date;
     if (gap < hours24gap) {
       timeCheck = true;
-      return timeCheck;
     }
     return timeCheck;
   }
@@ -76,7 +75,7 @@ function ListView() {
               checked={within24hours(item.purchasedDate)}
               onChange={(e) => handleCheckboxChange(e)}
               name={item.id}
-              aria-label="purchased" //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
+              aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
             />{' '}
             {` ${item.itemName} `}
           </li>
