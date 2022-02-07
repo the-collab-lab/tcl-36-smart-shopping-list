@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +34,6 @@ function ListView() {
   }, [localToken, navigate]);
 
   //loading state controls page render to ensure items.length can evaluate after the items have been retrieved from firebase
-
   return (
     <div>
       {loading ? null : (

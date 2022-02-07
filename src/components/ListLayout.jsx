@@ -7,7 +7,6 @@ const setUpdateToDb = async (collection, itemId, field, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
   const fieldSet = {};
   fieldSet[field] = dataToUpdate;
-
   await setDoc(itemRef, fieldSet, { merge: true });
 };
 
