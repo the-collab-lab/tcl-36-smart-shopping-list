@@ -35,7 +35,7 @@ function ListView() {
 
   //loading state controls page render to ensure items.length can evaluate after the items have been retrieved from firebase
   return (
-    <div>
+    <>
       {loading ? null : (
         <div className="m-20">
           {items.length ? (
@@ -45,7 +45,7 @@ function ListView() {
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }
 

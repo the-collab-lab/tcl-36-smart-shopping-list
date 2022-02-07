@@ -101,7 +101,7 @@ function AddItem() {
   };
 
   return (
-    <div>
+    <>
       <Toaster />
 
       <form method="post">
@@ -142,7 +142,7 @@ function AddItem() {
           Add Item
         </button>
       </form>
-    </div>
+    </>
   );
 }
 

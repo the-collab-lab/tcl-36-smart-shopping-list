@@ -45,7 +45,7 @@ const ListLayout = ({ items, localToken }) => {
   };
 
   return (
-    <div>
+    <>
       <label className="" htmlFor="search">
         Filter shopping list
       </label>
@@ -93,7 +93,7 @@ const ListLayout = ({ items, localToken }) => {
             </li>
           ))}
       </ul>
-    </div>
+    </>
   );
 };
 export default ListLayout;
