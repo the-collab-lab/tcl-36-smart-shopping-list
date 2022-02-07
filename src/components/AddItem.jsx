@@ -3,7 +3,7 @@ import { getDoc, doc, setDoc } from 'firebase/firestore';
 
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
-import Errors from './Errors';
+import toast, { Toaster } from 'react-hot-toast';
 
 const radioButtonOptions = [
   {
@@ -51,9 +51,6 @@ async function duplicateCheck(localToken, itemNameNormalized) {
 function AddItem() {
   const [itemName, setItemName] = useState('');
   const [frequency, setFrequency] = useState(7);
-  const [notification, setNotification] = useState('');
-
-  const [duplicateMessage, setDuplicateMessage] = useState(null);
 
   const navigate = useNavigate();
 
@@ -79,9 +76,10 @@ function AddItem() {
     if (isDuplicateFound) {
       // sets Error message if duplicateCheck results in isDuplicateFound === true
       // if isDuplicateFound returns, preventing item from being written to db
-      setDuplicateMessage(
+      toast.error(
         `${itemNameNormalized} already exists in your list under the name ${itemName}!`,
       );
+
       return;
     }
     try {
@@ -91,13 +89,10 @@ function AddItem() {
         frequency: Number(frequency),
         purchasedDate: null,
       });
+      toast.success(`Successfully added ${itemName}`);
 
-      setNotification(`Successfully added ${itemName}`);
       setItemName('');
       console.log('Document written with ID: ', itemNameNormalized, itemName);
-      setTimeout(() => {
-        setNotification('');
-      }, 8000);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
@@ -105,10 +100,8 @@ function AddItem() {
 
   return (
     <div>
-      {duplicateMessage && <Errors message={duplicateMessage} />}
-      <br />
-      {notification}
-      <br />
+      <Toaster />
+
       <form method="post">
         <label htmlFor="itemName">Item Name:</label>
         <input
