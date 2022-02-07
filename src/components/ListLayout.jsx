@@ -15,7 +15,7 @@ const ListLayout = ({ items, localToken }) => {
 
   const currentTime = Date.now();
   const hours24gap = Math.pow(8.64, 7); //24 hours in milliseconds
-
+  //create a reference for an input
   const inputRef = useRef(null);
 
   useEffect(() => {

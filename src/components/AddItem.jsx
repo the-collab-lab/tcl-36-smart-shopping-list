@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getDoc, doc, setDoc } from 'firebase/firestore';
 
 import { db } from '../lib/firebase';
@@ -53,8 +53,9 @@ function AddItem() {
   const [frequency, setFrequency] = useState(7);
 
   const navigate = useNavigate();
+  const inputRef = useRef(null);
 
-  //retrive the token from localStorage
+  //retrieve the token from localStorage
   const localToken = localStorage.getItem('list-token');
   //save normalized users input to use as an unique key
   const itemNameNormalized = removePunctuation(itemName);
@@ -64,6 +65,7 @@ function AddItem() {
       navigate('/');
       return;
     }
+    inputRef.current.focus();
   }, [localToken, navigate]);
 
   const handleSubmit = async (e) => {
@@ -108,6 +110,7 @@ function AddItem() {
           type="text"
           id="itemName"
           name="itemName"
+          ref={inputRef}
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
         ></input>
