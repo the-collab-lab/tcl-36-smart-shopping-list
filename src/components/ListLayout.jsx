@@ -46,18 +46,34 @@ const ListLayout = ({ items, localToken }) => {
 
   return (
     <div>
-      <label htmlFor="search">Filter shopping list</label>
-      <input
-        className="border"
-        type="search"
-        id="search"
-        ref={inputRef}
-        value={filter}
-        placeholder=""
-        onChange={(e) => setFilter(e.target.value)}
-        aria-label="search the shopping list"
-      />
-
+      <label className="" htmlFor="search">
+        Filter shopping list
+      </label>
+      <div className=" relative text-gray-600 focus-within:text-gray-400">
+        <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+          <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            className="w-6 h-6"
+          >
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </span>
+        <input
+          className="text-black bg-violet-100 py-2 text-md bg-gray-900 rounded-md pl-10"
+          type="search"
+          id="search"
+          ref={inputRef}
+          value={filter}
+          placeholder="Search"
+          onChange={(e) => setFilter(e.target.value)}
+          aria-label="search the shopping list"
+        ></input>
+      </div>
       <ul className="grid grid-cols-2 justify-around">
         {items
           .filter((item) => item.id.includes(filter.toLowerCase()))
