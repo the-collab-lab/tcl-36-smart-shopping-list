@@ -70,26 +70,6 @@ function ListView() {
     return timeCheck;
   }
 
-  return (
-    <div>
-      Your Shopping List:
-      <ul>
-        {items.map((item, idx) => (
-          <li key={idx}>
-            <input
-              type="checkbox"
-              checked={within24hours(item.purchasedDate)}
-              onChange={(e) => handleCheckboxChange(e)}
-              name={item.id}
-              aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
-            />{' '}
-            {` ${item.itemName} `}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-
   //controls page render to ensure items.length can evaluate after the items have been retrieved from firebase
   if (loading) {
     return (
@@ -102,7 +82,16 @@ function ListView() {
             <ul className="grid grid-cols-2 justify-around">
               {items.map((item, idx) => (
                 <li className="flex flex-col my-4" key={idx}>
-                  <div>{` Item Name: ${item.itemName}`}</div>
+                  <div>
+                    {` Item Name: ${item.itemName}`}{' '}
+                    <input
+                      type="checkbox"
+                      checked={within24hours(item.purchasedDate)}
+                      onChange={(e) => handleCheckboxChange(e)}
+                      name={item.id}
+                      aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
+                    />
+                  </div>
                   <div>{` Frequency: ${item.frequency}`}</div>
                 </li>
               ))}
