@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
-import { collection, onSnapshot, setDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Welcome from './Welcome';
 
 //reusable function to send updates to db
-const setUpdateToDb = async (collection, itemId, field, dataToUpdate) => {
+const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
-  const fieldSet = {};
-  fieldSet[field] = dataToUpdate;
-
-  await setDoc(itemRef, fieldSet, { merge: true });
+  // const fieldSet = {};
+  // fieldSet[field] = dataToUpdate;
+  console.log('function' + itemId);
+  await updateDoc(itemRef, dataToUpdate);
 };
 
 function ListView() {
@@ -50,12 +50,22 @@ function ListView() {
   //
   const handleCheckboxChange = async (e) => {
     const itemId = e.target.name;
+
+    const itemTest = { itemName: 'potato', totalPurchases: 2 };
     //create time variable to save time when user checked the box as purchasedTime
-    const datePurchased = Date.now();
+    //const datePurchased = Date.now();
     //if user want to uncheck the item it can be done and purchasedDate is set to null again
     if (e.target.checked) {
-      setUpdateToDb(localToken, itemId, 'purchasedDate', datePurchased);
+      // get item from state
+      // if datePurchased = null, use createdAt
+      // (currentTime - datePurchased)/oneDay = daysSinceLastTransaction
+      // previoousEstimate = calculateEstimate(previousEstimate, daysSince, totalPurchases)
+      // totalPUrchases + 1
+      // update datePurchased to currentTime
+      console.log('hello there');
+      setUpdateToDb(localToken, itemId, itemTest);
     } else {
+      console.log('hello two');
       setUpdateToDb(localToken, itemId, 'purchasedDate', null);
     }
   };
@@ -92,7 +102,7 @@ function ListView() {
                       aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
                     />
                   </div>
-                  <div>{` Frequency: ${item.frequency}`}</div>
+                  <div>{` Frequency: ${item.previousEstimate}`}</div>
                 </li>
               ))}
             </ul>
