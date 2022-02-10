@@ -4,13 +4,11 @@ import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Welcome from './Welcome';
+import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 
 //reusable function to send updates to db
 const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
-  // const fieldSet = {};
-  // fieldSet[field] = dataToUpdate;
-  console.log('function' + itemId);
   await updateDoc(itemRef, dataToUpdate);
 };
 
@@ -21,7 +19,7 @@ function ListView() {
   const [loading, setLoading] = useState(false);
 
   const currentTime = Date.now();
-  const hours24gap = Math.pow(8.64, 7); //24 hours in milliseconds
+  const oneDay = Math.pow(8.64, 7); //24 hours in milliseconds
 
   const localToken = localStorage.getItem('list-token');
   const navigate = useNavigate();
@@ -50,23 +48,44 @@ function ListView() {
   //
   const handleCheckboxChange = async (e) => {
     const itemId = e.target.name;
-
-    const itemTest = { itemName: 'potato', totalPurchases: 2 };
-    //create time variable to save time when user checked the box as purchasedTime
-    //const datePurchased = Date.now();
+    let daysSinceLastTransaction;
     //if user want to uncheck the item it can be done and purchasedDate is set to null again
     if (e.target.checked) {
       // get item from state
+      const itemToUpdate = items.find((item) => itemId === item.name);
+      console.log(itemToUpdate);
+      if (!itemToUpdate.purchasedDate) {
+        daysSinceLastTransaction =
+          (currentTime - itemToUpdate.createdAt) / oneDay;
+        itemToUpdate.newEstimate = calculateEstimate(
+          itemToUpdate.previousEstimate,
+          daysSinceLastTransaction,
+          itemToUpdate.totalPurchases,
+        );
+        itemToUpdate.totalPurchases++;
+        itemToUpdate.purchasedDate = currentTime;
+
+        setUpdateToDb(localToken, itemId, itemToUpdate);
+      } else {
+        daysSinceLastTransaction =
+          (currentTime - itemToUpdate.purchasedDate) / oneDay;
+        itemToUpdate.newEstimate = calculateEstimate(
+          itemToUpdate.previousEstimate,
+          daysSinceLastTransaction,
+          itemToUpdate.totalPurchases,
+        );
+        itemToUpdate.totalPurchases++;
+        itemToUpdate.purchasedDate = currentTime;
+
+        setUpdateToDb(localToken, itemId, itemToUpdate);
+      }
       // if datePurchased = null, use createdAt
       // (currentTime - datePurchased)/oneDay = daysSinceLastTransaction
       // previoousEstimate = calculateEstimate(previousEstimate, daysSince, totalPurchases)
       // totalPUrchases + 1
       // update datePurchased to currentTime
-      console.log('hello there');
-      setUpdateToDb(localToken, itemId, itemTest);
     } else {
       console.log('hello two');
-      setUpdateToDb(localToken, itemId, 'purchasedDate', null);
     }
   };
 
@@ -74,7 +93,7 @@ function ListView() {
   function within24hours(date) {
     let timeCheck = false;
     const gap = currentTime - date;
-    if (gap < hours24gap) {
+    if (gap < oneDay) {
       timeCheck = true;
     }
     return timeCheck;
