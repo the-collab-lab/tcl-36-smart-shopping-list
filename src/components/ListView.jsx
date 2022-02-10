@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Welcome from './Welcome';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 
-//reusable function to send updates to db
+// UPDATED this function to accommodate changes to multiple values on an item object
 const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
   await updateDoc(itemRef, dataToUpdate);
@@ -48,27 +48,31 @@ function ListView() {
   //
   const handleCheckboxChange = async (e) => {
     const itemId = e.target.name;
+    // grabbing the specific item from state that is clicked because we will be updating its properties
     const itemToUpdate = items.find((item) => itemId === item.itemName);
-    let daysSinceLastTransaction;
-    //if user want to uncheck the item it can be done and purchasedDate is set to null again
-    if (e.target.checked) {
-      console.log(itemToUpdate);
 
+    let daysSinceLastTransaction;
+
+    // if user checks a box, itemToUpdate is taken through this flow
+    if (e.target.checked) {
+      // check to see if the item has never been purchased before (purchasedDate is set to null by default)
       if (!itemToUpdate.purchasedDate) {
         daysSinceLastTransaction =
           (currentTime - itemToUpdate.createdAt) / oneDay;
+        // this is the util function we imported
         itemToUpdate.newEstimate = calculateEstimate(
           itemToUpdate.previousEstimate,
           daysSinceLastTransaction,
           itemToUpdate.totalPurchases,
         );
+        // increment totalPurchases/purchasedDate
         itemToUpdate.totalPurchases++;
         itemToUpdate.purchasedDate = currentTime;
 
-        console.log(itemToUpdate);
-
+        // itemToUpdate is sent to Firestore with updated values
         setUpdateToDb(localToken, itemId, itemToUpdate);
       } else {
+        // basically this is the same flow as above, but will run if the item has been purchased before
         daysSinceLastTransaction =
           (currentTime - itemToUpdate.purchasedDate) / oneDay;
         itemToUpdate.newEstimate = calculateEstimate(
@@ -79,17 +83,11 @@ function ListView() {
         itemToUpdate.totalPurchases++;
         itemToUpdate.purchasedDate = currentTime;
 
-        console.log(itemToUpdate);
-
         setUpdateToDb(localToken, itemId, itemToUpdate);
       }
-      // if datePurchased = null, use createdAt
-      // (currentTime - datePurchased)/oneDay = daysSinceLastTransaction
-      // previoousEstimate = calculateEstimate(previousEstimate, daysSince, totalPurchases)
-      // totalPUrchases + 1
-      // update datePurchased to currentTime
     } else {
-      console.log('hello two');
+      // TODO: We should think through what happens if a user wants to uncheck an item...
+      console.log('heyyyyyy');
     }
   };
 

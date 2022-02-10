@@ -88,7 +88,7 @@ function AddItem() {
       // Add a new document/item in collection/localToken under normilized item name  (use it as unique id)
       await setDoc(doc(db, localToken, itemNameNormalized), {
         createdAt: Date.now(),
-        itemName: itemName,
+        itemName,
         previousEstimate: Number(frequency),
         purchasedDate: null,
         totalPurchases: 0,
