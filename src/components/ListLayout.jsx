@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { setDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { ImCross } from 'react-icons/im';
 
 //reusable function to send updates to db
 const setUpdateToDb = async (collection, itemId, field, dataToUpdate) => {
@@ -49,7 +50,7 @@ const ListLayout = ({ items, localToken }) => {
       <label className="" htmlFor="search">
         Filter shopping list
       </label>
-      <div className=" relative text-gray-600 focus-within:text-gray-400">
+      <div className="flex relative text-gray-600 focus-within:text-gray-400">
         <span className="absolute inset-y-0 left-0 flex items-center pl-2">
           <svg
             fill="none"
@@ -64,15 +65,22 @@ const ListLayout = ({ items, localToken }) => {
           </svg>
         </span>
         <input
-          className="text-black bg-violet-100 py-2 text-md bg-gray-900 rounded-md pl-10"
-          type="search"
+          className="text-black bg-violet-100 p-2 text-md bg-gray-900 rounded-md pl-10"
+          type="text"
           id="search"
           ref={inputRef}
           value={filter}
-          placeholder="Search"
+          placeholder="Filter"
           onChange={(e) => setFilter(e.target.value)}
-          aria-label="search the shopping list"
+          aria-label="filter the shopping list"
         ></input>
+        <button
+          className="p-1 text-md rounded-md"
+          aria-label="clear input"
+          onClick={() => setFilter('')}
+        >
+          <ImCross />
+        </button>
       </div>
       <ul className="grid grid-cols-2 justify-around">
         {items

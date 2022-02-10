@@ -36,7 +36,9 @@ function ListView() {
   //loading state controls page render to ensure items.length can evaluate after the items have been retrieved from firebase
   return (
     <>
-      {loading ? null : (
+      {loading ? (
+        <img src="img/loading.gif" alt="loading" className="m-auto" />
+      ) : (
         <div className="m-20">
           {items.length ? (
             <ListLayout items={items} localToken={localToken} />
