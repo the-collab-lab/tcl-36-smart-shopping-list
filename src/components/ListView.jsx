@@ -48,12 +48,12 @@ function ListView() {
   //
   const handleCheckboxChange = async (e) => {
     const itemId = e.target.name;
+    const itemToUpdate = items.find((item) => itemId === item.itemName);
     let daysSinceLastTransaction;
     //if user want to uncheck the item it can be done and purchasedDate is set to null again
     if (e.target.checked) {
-      // get item from state
-      const itemToUpdate = items.find((item) => itemId === item.name);
       console.log(itemToUpdate);
+
       if (!itemToUpdate.purchasedDate) {
         daysSinceLastTransaction =
           (currentTime - itemToUpdate.createdAt) / oneDay;
@@ -64,6 +64,8 @@ function ListView() {
         );
         itemToUpdate.totalPurchases++;
         itemToUpdate.purchasedDate = currentTime;
+
+        console.log(itemToUpdate);
 
         setUpdateToDb(localToken, itemId, itemToUpdate);
       } else {
@@ -76,6 +78,8 @@ function ListView() {
         );
         itemToUpdate.totalPurchases++;
         itemToUpdate.purchasedDate = currentTime;
+
+        console.log(itemToUpdate);
 
         setUpdateToDb(localToken, itemId, itemToUpdate);
       }
