@@ -49,7 +49,7 @@ function ListView() {
   const handleCheckboxChange = async (e) => {
     const itemId = e.target.name;
     // grabbing the specific item from state that is clicked because we will be updating its properties
-    const itemToUpdate = items.find((item) => itemId === item.itemName);
+    const itemToUpdate = items.find((item) => itemId === item.id);
 
     let daysSinceLastTransaction;
 
