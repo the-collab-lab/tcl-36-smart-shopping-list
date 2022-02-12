@@ -49,42 +49,29 @@ function ListView() {
   const handleCheckboxChange = async (e) => {
     const itemId = e.target.name;
     // grabbing the specific item from state that is clicked because we will be updating its properties
-    const itemToUpdate = items.find((item) => itemId === item.id);
+    let itemToUpdate = items.find((item) => itemId === item.id);
 
-    let daysSinceLastTransaction;
+    const dateOfLastTransaction =
+      itemToUpdate.totalPurchases > 0
+        ? itemToUpdate.purhcasedDate
+        : itemToUpdate.createdAt;
+    const daysSinceLastTransaction =
+      (currentTime - dateOfLastTransaction) / oneDay;
 
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
-      // check to see if the item has never been purchased before (purchasedDate is set to null by default)
-      if (!itemToUpdate.purchasedDate) {
-        daysSinceLastTransaction =
-          (currentTime - itemToUpdate.createdAt) / oneDay;
-        // this is the util function we imported
-        itemToUpdate.newEstimate = calculateEstimate(
+      itemToUpdate = {
+        ...itemToUpdate,
+        newEstimate: calculateEstimate(
           itemToUpdate.previousEstimate,
           daysSinceLastTransaction,
           itemToUpdate.totalPurchases,
-        );
-        // increment totalPurchases/purchasedDate
-        itemToUpdate.totalPurchases++;
-        itemToUpdate.purchasedDate = currentTime;
-
-        // itemToUpdate is sent to Firestore with updated values
-        setUpdateToDb(localToken, itemId, itemToUpdate);
-      } else {
-        // basically this is the same flow as above, but will run if the item has been purchased before
-        daysSinceLastTransaction =
-          (currentTime - itemToUpdate.purchasedDate) / oneDay;
-        itemToUpdate.newEstimate = calculateEstimate(
-          itemToUpdate.previousEstimate,
-          daysSinceLastTransaction,
-          itemToUpdate.totalPurchases,
-        );
-        itemToUpdate.totalPurchases++;
-        itemToUpdate.purchasedDate = currentTime;
-
-        setUpdateToDb(localToken, itemId, itemToUpdate);
-      }
+        ),
+        totalPurchases: itemToUpdate.totalPurchases + 1,
+        purchasedDate: currentTime,
+      };
+      // itemToUpdate is sent to Firestore with updated values
+      setUpdateToDb(localToken, itemId, itemToUpdate);
     } else {
       // TODO: We should think through what happens if a user wants to uncheck an item...
       console.log('heyyyyyy');
