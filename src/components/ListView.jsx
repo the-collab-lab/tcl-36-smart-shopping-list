@@ -53,16 +53,16 @@ function ListView() {
 
     const dateOfLastTransaction =
       itemToUpdate.totalPurchases > 0
-        ? itemToUpdate.purhcasedDate
+        ? itemToUpdate.purchasedDate
         : itemToUpdate.createdAt;
     const daysSinceLastTransaction =
       (currentTime - dateOfLastTransaction) / oneDay;
+    console.log(daysSinceLastTransaction);
 
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
       itemToUpdate = {
-        ...itemToUpdate,
-        newEstimate: calculateEstimate(
+        previousEstimate: calculateEstimate(
           itemToUpdate.previousEstimate,
           daysSinceLastTransaction,
           itemToUpdate.totalPurchases,
@@ -72,9 +72,6 @@ function ListView() {
       };
       // itemToUpdate is sent to Firestore with updated values
       setUpdateToDb(localToken, itemId, itemToUpdate);
-    } else {
-      // TODO: We should think through what happens if a user wants to uncheck an item...
-      console.log('heyyyyyy');
     }
   };
 
