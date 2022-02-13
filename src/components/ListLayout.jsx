@@ -15,7 +15,7 @@ const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
 
   const currentTime = Date.now();
-  const oneDay = Math.pow(8.64, 7); //24 hours in milliseconds
+  const oneDay = 86400000; //24 hours in milliseconds
   //create a reference for an input
   const inputRef = useRef(null);
 
@@ -32,8 +32,10 @@ const ListLayout = ({ items, localToken }) => {
       itemToUpdate.totalPurchases > 0
         ? itemToUpdate.purchasedDate
         : itemToUpdate.createdAt;
-    const daysSinceLastTransaction =
-      (currentTime - dateOfLastTransaction) / oneDay;
+    const daysSinceLastTransaction = (
+      (currentTime - dateOfLastTransaction) /
+      oneDay
+    ).toFixed();
 
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
