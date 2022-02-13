@@ -57,7 +57,6 @@ function ListView() {
         : itemToUpdate.createdAt;
     const daysSinceLastTransaction =
       (currentTime - dateOfLastTransaction) / oneDay;
-    console.log(daysSinceLastTransaction);
 
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
