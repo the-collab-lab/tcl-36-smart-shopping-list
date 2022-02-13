@@ -10,7 +10,7 @@ import './App.css';
 
 function App() {
   return (
-    <div>
+    <>
       <Header />
       <Routes>
         <Route path="/home" element={<Home />} />
@@ -19,7 +19,7 @@ function App() {
         <Route path="listView" element={<ListView />} />
       </Routes>
       <Navigation />
-    </div>
+    </>
   );
 }
 

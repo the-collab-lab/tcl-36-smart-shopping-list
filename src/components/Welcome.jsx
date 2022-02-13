@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 function Welcome() {
   return (
-    <div>
+    <>
       <h1 className="font-Karma text-black text-center text-4xl my-4">
         Welcome to ~name of app here~
       </h1>
@@ -15,7 +15,7 @@ function Welcome() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

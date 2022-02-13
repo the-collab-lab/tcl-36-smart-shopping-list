@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getDoc, doc, setDoc } from 'firebase/firestore';
 
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
-import Errors from './Errors';
+import toast, { Toaster } from 'react-hot-toast';
 
 const radioButtonOptions = [
   {
@@ -51,13 +51,11 @@ async function duplicateCheck(localToken, itemNameNormalized) {
 function AddItem() {
   const [itemName, setItemName] = useState('');
   const [frequency, setFrequency] = useState(7);
-  const [notification, setNotification] = useState('');
-
-  const [duplicateMessage, setDuplicateMessage] = useState(null);
 
   const navigate = useNavigate();
+  const inputRef = useRef(null);
 
-  //retrive the token from localStorage
+  //retrieve the token from localStorage
   const localToken = localStorage.getItem('list-token');
   //save normalized users input to use as an unique key
   const itemNameNormalized = removePunctuation(itemName);
@@ -67,6 +65,7 @@ function AddItem() {
       navigate('/');
       return;
     }
+    inputRef.current.focus();
   }, [localToken, navigate]);
 
   const handleSubmit = async (e) => {
@@ -79,9 +78,10 @@ function AddItem() {
     if (isDuplicateFound) {
       // sets Error message if duplicateCheck results in isDuplicateFound === true
       // if isDuplicateFound returns, preventing item from being written to db
-      setDuplicateMessage(
+      toast.error(
         `${itemNameNormalized} already exists in your list under the name ${itemName}!`,
       );
+
       return;
     }
     try {
@@ -93,30 +93,26 @@ function AddItem() {
         purchasedDate: null,
         totalPurchases: 0,
       });
+      toast.success(`Successfully added ${itemName}`);
 
-      setNotification(`Successfully added ${itemName}`);
       setItemName('');
       console.log('Document written with ID: ', itemNameNormalized, itemName);
-      setTimeout(() => {
-        setNotification('');
-      }, 8000);
     } catch (error) {
       console.error('Error adding document: ', error);
     }
   };
 
   return (
-    <div>
-      {duplicateMessage && <Errors message={duplicateMessage} />}
-      <br />
-      {notification}
-      <br />
+    <>
+      <Toaster />
+
       <form method="post">
         <label htmlFor="itemName">Item Name:</label>
         <input
           type="text"
           id="itemName"
           name="itemName"
+          ref={inputRef}
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
         ></input>
@@ -148,7 +144,7 @@ function AddItem() {
           Add Item
         </button>
       </form>
-    </div>
+    </>
   );
 }
 
