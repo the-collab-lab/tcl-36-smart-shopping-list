@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-import { collection, onSnapshot, setDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Welcome from './Welcome';
+import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 
-//reusable function to send updates to db
-const setUpdateToDb = async (collection, itemId, field, dataToUpdate) => {
+// UPDATED this function to accommodate changes to multiple values on an item object
+const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
-  const fieldSet = {};
-  fieldSet[field] = dataToUpdate;
-
-  await setDoc(itemRef, fieldSet, { merge: true });
+  await updateDoc(itemRef, dataToUpdate);
 };
 
 function ListView() {
@@ -21,7 +19,7 @@ function ListView() {
   const [loading, setLoading] = useState(false);
 
   const currentTime = Date.now();
-  const hours24gap = Math.pow(8.64, 7); //24 hours in milliseconds
+  const oneDay = Math.pow(8.64, 7); //24 hours in milliseconds
 
   const localToken = localStorage.getItem('list-token');
   const navigate = useNavigate();
@@ -50,13 +48,29 @@ function ListView() {
   //
   const handleCheckboxChange = async (e) => {
     const itemId = e.target.name;
-    //create time variable to save time when user checked the box as purchasedTime
-    const datePurchased = Date.now();
-    //if user want to uncheck the item it can be done and purchasedDate is set to null again
+    // grabbing the specific item from state that is clicked because we will be updating its properties
+    let itemToUpdate = items.find((item) => itemId === item.id);
+
+    const dateOfLastTransaction =
+      itemToUpdate.totalPurchases > 0
+        ? itemToUpdate.purchasedDate
+        : itemToUpdate.createdAt;
+    const daysSinceLastTransaction =
+      (currentTime - dateOfLastTransaction) / oneDay;
+
+    // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
-      setUpdateToDb(localToken, itemId, 'purchasedDate', datePurchased);
-    } else {
-      setUpdateToDb(localToken, itemId, 'purchasedDate', null);
+      itemToUpdate = {
+        previousEstimate: calculateEstimate(
+          itemToUpdate.previousEstimate,
+          daysSinceLastTransaction,
+          itemToUpdate.totalPurchases,
+        ),
+        totalPurchases: itemToUpdate.totalPurchases + 1,
+        purchasedDate: currentTime,
+      };
+      // itemToUpdate is sent to Firestore with updated values
+      setUpdateToDb(localToken, itemId, itemToUpdate);
     }
   };
 
@@ -64,7 +78,7 @@ function ListView() {
   function within24hours(date) {
     let timeCheck = false;
     const gap = currentTime - date;
-    if (gap < hours24gap) {
+    if (gap < oneDay) {
       timeCheck = true;
     }
     return timeCheck;
@@ -92,7 +106,7 @@ function ListView() {
                       aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
                     />
                   </div>
-                  <div>{` Frequency: ${item.frequency}`}</div>
+                  <div>{` Frequency: ${item.previousEstimate}`}</div>
                 </li>
               ))}
             </ul>
