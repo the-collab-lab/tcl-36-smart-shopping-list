@@ -32,10 +32,8 @@ const ListLayout = ({ items, localToken }) => {
       itemToUpdate.totalPurchases > 0
         ? itemToUpdate.purchasedDate
         : itemToUpdate.createdAt;
-    const daysSinceLastTransaction = (
-      (currentTime - dateOfLastTransaction) /
-      oneDay
-    ).toFixed();
+    const daysSinceLastTransaction =
+      (currentTime - dateOfLastTransaction) / oneDay;
 
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
