@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import { updateDoc, doc } from 'firebase/firestore';
 
 import { db } from '../lib/firebase';
 import { ImCross } from 'react-icons/im';
@@ -15,7 +15,7 @@ const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
 
   const currentTime = Date.now();
-  const oneDay = Math.pow(8.64, 7); //24 hours in milliseconds
+  const oneDay = 86400000; //24 hours in milliseconds
   //create a reference for an input
   const inputRef = useRef(null);
 
