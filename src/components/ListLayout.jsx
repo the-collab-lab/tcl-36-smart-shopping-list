@@ -9,6 +9,7 @@ import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
   await updateDoc(itemRef, dataToUpdate);
+  console.log('await finished');
 };
 
 const ListLayout = ({ items, localToken }) => {
@@ -60,6 +61,28 @@ const ListLayout = ({ items, localToken }) => {
     }
     return timeCheck;
   }
+
+  //this sorts by previousEstimate (calculation of when user will buy the item again) Note: items is already sorted alphabetically by item Id which is the normalized item name
+  items.sort((itemA, itemB) => itemA.previousEstimate - itemB.previousEstimate);
+
+  // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
+  // isActive is defaulted to false when item is added
+  items.forEach((item) => {
+    const dateOfLastTransaction =
+      item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
+    const daysSinceLastTransaction =
+      (currentTime - dateOfLastTransaction) / oneDay;
+    if (
+      item.totalPurchases > 1 &&
+      daysSinceLastTransaction < 2 * item.previousEstimate
+    ) {
+      let itemToUpdate = {
+        ...item,
+        isActive: true,
+      };
+      setUpdateToDb(localToken, item.id, itemToUpdate);
+    }
+  });
 
   return (
     <>
