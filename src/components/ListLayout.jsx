@@ -29,10 +29,6 @@ const ListLayout = ({ items, localToken }) => {
   }, []);
 
   const handleCheckboxChange = async (e, checkedItem) => {
-    /*     const itemId = e.target.name; */
-    // grabbing the specific item from state that is clicked because we will be updating its properties
-    /* let itemToUpdate = items.find((item) => itemId === item.id); */
-    console.log(checkedItem);
     const dateOfLastTransaction =
       checkedItem.totalPurchases > 0
         ? checkedItem.purchasedDate
