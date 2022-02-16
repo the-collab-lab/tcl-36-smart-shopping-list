@@ -62,9 +62,6 @@ const ListLayout = ({ items, localToken }) => {
     return timeCheck;
   }
 
-  //this sorts by previousEstimate (calculation of when user will buy the item again) Note: items is already sorted alphabetically by item Id which is the normalized item name
-  items.sort((itemA, itemB) => itemA.previousEstimate - itemB.previousEstimate);
-
   // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
   // isActive is defaulted to false when item is added
   items.forEach((item) => {
@@ -83,6 +80,35 @@ const ListLayout = ({ items, localToken }) => {
       setUpdateToDb(localToken, item.id, itemToUpdate);
     }
   });
+
+  //this sorts by previousEstimate (calculation of when user will buy the item again) Note: items is already sorted alphabetically by item Id which is the normalized item name
+  items
+    .sort((itemA, itemB) => itemA.previousEstimate - itemB.previousEstimate)
+    .sort((itemA, itemB) => Number(itemB.isActive) - Number(itemA.isActive));
+  let frequencyGroup;
+  function colorClass(item) {
+    //inactive = gray
+    if (!item.isActive) {
+      frequencyGroup = 'inactive';
+      return 'bg-gray-300';
+    }
+
+    //buy soon
+    else if (item.previousEstimate < 7) {
+      frequencyGroup = 'buy soon';
+      return 'bg-green-500';
+    }
+    //kind of soon
+    else if (item.previousEstimate < 30) {
+      frequencyGroup = 'kind of soon';
+      return 'bg-yellow-400';
+    }
+    //not so soon
+    else {
+      frequencyGroup = 'not so soon';
+      return 'bg-rose-300';
+    }
+  }
 
   return (
     <>
@@ -121,13 +147,13 @@ const ListLayout = ({ items, localToken }) => {
           <ImCross />
         </button>
       </div>
-      <ul className="grid grid-cols-2 justify-around">
+      <ul className="grid grid-cols-3 justify-around">
         {items
           .filter((item) => item.id.includes(filter.toLowerCase()))
           .map((item, idx) => (
-            <li className="flex flex-col my-4" key={idx}>
+            <li className={`flex flex-col my-4 ${colorClass(item)}`} key={idx}>
               <div>
-                {` Item Name: ${item.itemName}`}{' '}
+                {`Item Name: ${item.itemName}`}{' '}
                 <input
                   type="checkbox"
                   checked={within24hours(item.purchasedDate)}
@@ -137,6 +163,7 @@ const ListLayout = ({ items, localToken }) => {
                 />
               </div>
               <div>{` Frequency: ${item.previousEstimate}`}</div>
+              <div>{`Need to buy? ${frequencyGroup}`}</div>
             </li>
           ))}
       </ul>
