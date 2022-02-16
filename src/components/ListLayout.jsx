@@ -9,7 +9,6 @@ import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
   await updateDoc(itemRef, dataToUpdate);
-  console.log('await finished');
 };
 
 const ListLayout = ({ items, localToken }) => {
@@ -162,7 +161,7 @@ const ListLayout = ({ items, localToken }) => {
                   aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
                 />
               </div>
-              <div>{` Frequency: ${item.previousEstimate}`}</div>
+              <div>{` Estimated time til purchase: ${item.previousEstimate}`}</div>
               <div>{`Need to buy? ${frequencyGroup}`}</div>
             </li>
           ))}
