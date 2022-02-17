@@ -100,7 +100,7 @@ const ListLayout = ({ items, localToken }) => {
     //kind of soon
     else if (item.previousEstimate < 30) {
       frequencyGroup = 'kind of soon';
-      return 'bg-yellow-400';
+      return '';
     }
     //not so soon
     else {
@@ -108,6 +108,46 @@ const ListLayout = ({ items, localToken }) => {
       return 'bg-rose-300';
     }
   }
+
+  const filteredItems = items.filter((item) =>
+    item.id.includes(filter.toLowerCase()),
+  );
+
+  const groups = [
+    {
+      label: 'Soon',
+      sublabel: "We think you'll need this in less than 7 days",
+      groupFilter: (item) => {
+        return item.previousEstimate < 7 && item.isActive === true;
+      },
+      // classStyle: 'bg-yellow-400'
+    },
+    {
+      label: 'Kind of soon',
+      sublabel: "We think you'll need this in less than 7 days",
+      groupFilter: (item) => {
+        return (
+          item.previousEstimate >= 7 &&
+          item.previousEstimate < 30 &&
+          item.isActive === true
+        );
+      },
+    },
+    {
+      label: 'Not soon',
+      sublabel: "We think you'll need this in less than 7 days",
+      groupFilter: (item) => {
+        return item.previousEstimate >= 30 && item.isActive === true;
+      },
+    },
+    {
+      label: 'Inactive',
+      sublabel: "We think you'll need this in less than 7 days",
+      groupFilter: (item) => {
+        return item.isActive === false;
+      },
+    },
+  ];
 
   return (
     <>
@@ -146,26 +186,40 @@ const ListLayout = ({ items, localToken }) => {
           <ImCross />
         </button>
       </div>
-      <ul className="grid grid-cols-3 justify-around">
-        {items
-          .filter((item) => item.id.includes(filter.toLowerCase()))
-          .map((item, idx) => (
-            <li className={`flex flex-col my-4 ${colorClass(item)}`} key={idx}>
-              <div>
-                {`Item Name: ${item.itemName}`}{' '}
-                <input
-                  type="checkbox"
-                  checked={within24hours(item.purchasedDate)}
-                  onChange={(e) => handleCheckboxChange(e)}
-                  name={item.id}
-                  aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
-                />
-              </div>
-              <div>{` Estimated time til purchase: ${item.previousEstimate}`}</div>
-              <div>{`Need to buy? ${frequencyGroup}`}</div>
-            </li>
-          ))}
-      </ul>
+
+      {groups.map((group, idx) => (
+        <section key={idx} className="mt-6">
+          <div className="flex justify-between border-b-2">
+            <h1 className="text-xl font-semibold text-blue-700">
+              {group.label}
+            </h1>
+            <p className="text-gray-500">{group.sublabel}</p>
+          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-around">
+            {filteredItems
+              .filter((item) => group.groupFilter(item))
+              .map((item, idx) => (
+                <li
+                  className={`flex flex-col my-4 ${colorClass(item)}`}
+                  key={idx}
+                >
+                  <div>
+                    {`Item Name: ${item.itemName}`}{' '}
+                    <input
+                      type="checkbox"
+                      checked={within24hours(item.purchasedDate)}
+                      onChange={(e) => handleCheckboxChange(e)}
+                      name={item.id}
+                      aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
+                    />
+                  </div>
+                  <div>{` Estimated time til purchase: ${item.previousEstimate}`}</div>
+                  <div>{`Need to buy? ${frequencyGroup}`}</div>
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))}
     </>
   );
 };
