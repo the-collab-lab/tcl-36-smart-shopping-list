@@ -47,7 +47,7 @@ const ListLayout = ({ items, localToken }) => {
         totalPurchases: checkedItem.totalPurchases + 1,
         purchasedDate: currentTime,
       };
-      // itemToUpdate is sent to Firestore with updated values
+      // dataToUpdate is sent to Firestore with updated values
       setUpdateToDb(localToken, checkedItem.id, dataToUpdate);
     }
   };
@@ -62,7 +62,7 @@ const ListLayout = ({ items, localToken }) => {
     return timeCheck;
   }
 
-  function handleClick(itemId, itemName) {
+  function deleteButtonPressed(itemId, itemName) {
     if (window.confirm(`Are you sure you want to delete ${itemName}?`)) {
       deleteItemFromDb(localToken, itemId);
     }
@@ -122,7 +122,7 @@ const ListLayout = ({ items, localToken }) => {
                 <button
                   aria-label="delete button"
                   className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
-                  onClick={() => handleClick(item.id, item.itemName)}
+                  onClick={() => deleteButtonPressed(item.id, item.itemName)}
                 >
                   <RiDeleteBin6Fill />
                 </button>
