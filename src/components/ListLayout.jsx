@@ -112,7 +112,7 @@ const ListLayout = ({ items, localToken }) => {
       label: 'Not soon',
       sublabel: "We think you'll need this in more than 30 days",
       groupFilter: (item) => {
-        return item.previousEstimate >= 30 && item.isActive;
+        return item.previousEstimate >= 30 && item.isActive === true;
       },
       colorClass: 'bg-green-100',
     },
