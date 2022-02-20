@@ -85,13 +85,14 @@ function AddItem() {
       return;
     }
     try {
-      // Add a new document/item in collection/localToken under normilized item name  (use it as unique id)
+      // Add a new document/item in collection/localToken under normalized item name  (use it as unique id)
       await setDoc(doc(db, localToken, itemNameNormalized), {
         createdAt: Date.now(),
         itemName,
         previousEstimate: Number(frequency),
         purchasedDate: null,
         totalPurchases: 0,
+        isActive: false,
       });
       toast.success(`Successfully added ${itemName}`);
 
