@@ -120,7 +120,7 @@ const ListLayout = ({ items, localToken }) => {
                   aria-label={item.itemName} //what do we want to call this ('item', 'item.itemName', 'purchased item' .....)
                 />
                 <button
-                  aria-label="delete button"
+                  aria-label={`delete ${item.id} button`}
                   className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
                   onClick={() => deleteButtonPressed(item.id, item.itemName)}
                 >
