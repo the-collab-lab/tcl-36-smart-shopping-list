@@ -1,14 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { updateDoc, doc } from 'firebase/firestore';
+import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
 
 import { db } from '../lib/firebase';
 import { ImCross } from 'react-icons/im';
+import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 
 // UPDATED this function to accommodate changes to multiple values on an item object
 const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
   const itemRef = doc(db, collection, itemId);
   await updateDoc(itemRef, dataToUpdate);
+};
+//create a function to delete item from db
+const deleteItemFromDb = async (token, itemId) => {
+  await deleteDoc(doc(db, token, itemId));
 };
 
 const ListLayout = ({ items, localToken }) => {
@@ -23,31 +28,27 @@ const ListLayout = ({ items, localToken }) => {
     inputRef.current.focus();
   }, []);
 
-  const handleCheckboxChange = async (e) => {
-    const itemId = e.target.name;
-    // grabbing the specific item from state that is clicked because we will be updating its properties
-    let itemToUpdate = items.find((item) => itemId === item.id);
-
+  const handleCheckboxChange = async (e, checkedItem) => {
     const dateOfLastTransaction =
-      itemToUpdate.totalPurchases > 0
-        ? itemToUpdate.purchasedDate
-        : itemToUpdate.createdAt;
+      checkedItem.totalPurchases > 0
+        ? checkedItem.purchasedDate
+        : checkedItem.createdAt;
     const daysSinceLastTransaction =
       (currentTime - dateOfLastTransaction) / oneDay;
 
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
-      itemToUpdate = {
+      const dataToUpdate = {
         previousEstimate: calculateEstimate(
-          itemToUpdate.previousEstimate,
+          checkedItem.previousEstimate,
           daysSinceLastTransaction,
-          itemToUpdate.totalPurchases,
+          checkedItem.totalPurchases,
         ),
-        totalPurchases: itemToUpdate.totalPurchases + 1,
+        totalPurchases: checkedItem.totalPurchases + 1,
         purchasedDate: currentTime,
       };
-      // itemToUpdate is sent to Firestore with updated values
-      setUpdateToDb(localToken, itemId, itemToUpdate);
+      // dataToUpdate is sent to Firestore with updated values
+      setUpdateToDb(localToken, checkedItem.id, dataToUpdate);
     }
   };
 
@@ -59,6 +60,13 @@ const ListLayout = ({ items, localToken }) => {
       timeCheck = true;
     }
     return timeCheck;
+  }
+
+
+  function deleteButtonPressed(itemId, itemName) {
+    if (window.confirm(`Are you sure you want to delete ${itemName}?`)) {
+      deleteItemFromDb(localToken, itemId);
+    }
   }
 
   // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
@@ -125,6 +133,7 @@ const ListLayout = ({ items, localToken }) => {
       colorClass: 'bg-gray-200',
     },
   ];
+
 
   return (
     <>
@@ -194,6 +203,13 @@ const ListLayout = ({ items, localToken }) => {
                           name={item.id}
                           aria-label={item.itemName}
                         />
+                         <button
+                            aria-label={`delete ${item.id} button`}
+                            className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
+                            onClick={() => deleteButtonPressed(item.id, item.itemName)}
+                         >
+                           <RiDeleteBin6Fill />
+                       </button>
                       </div>
                       <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
                       <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
@@ -207,4 +223,5 @@ const ListLayout = ({ items, localToken }) => {
     </>
   );
 };
+
 export default ListLayout;
