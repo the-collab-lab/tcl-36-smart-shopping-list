@@ -29,6 +29,7 @@ const ListLayout = ({ items, localToken }) => {
   }, []);
 
   const handleCheckboxChange = async (e, checkedItem) => {
+    console.log(checkedItem);
     const dateOfLastTransaction =
       checkedItem.totalPurchases > 0
         ? checkedItem.purchasedDate
@@ -61,7 +62,6 @@ const ListLayout = ({ items, localToken }) => {
     }
     return timeCheck;
   }
-
 
   function deleteButtonPressed(itemId, itemName) {
     if (window.confirm(`Are you sure you want to delete ${itemName}?`)) {
@@ -134,7 +134,6 @@ const ListLayout = ({ items, localToken }) => {
     },
   ];
 
-
   return (
     <>
       <label className="" htmlFor="search">
@@ -199,17 +198,20 @@ const ListLayout = ({ items, localToken }) => {
                         <input
                           type="checkbox"
                           checked={within24hours(item.purchasedDate)}
-                          onChange={(e) => handleCheckboxChange(e)}
+                          onChange={(e) => handleCheckboxChange(e, item)}
                           name={item.id}
                           aria-label={item.itemName}
+                          disabled={within24hours(item.purchasedDate)}
                         />
-                         <button
-                            aria-label={`delete ${item.id} button`}
-                            className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
-                            onClick={() => deleteButtonPressed(item.id, item.itemName)}
-                         >
-                           <RiDeleteBin6Fill />
-                       </button>
+                        <button
+                          aria-label={`delete ${item.id} button`}
+                          className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
+                          onClick={() =>
+                            deleteButtonPressed(item.id, item.itemName)
+                          }
+                        >
+                          <RiDeleteBin6Fill />
+                        </button>
                       </div>
                       <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
                       <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
