@@ -88,27 +88,29 @@ const ListLayout = ({ items, localToken, loading }) => {
       });
       setLayoutItems(test);
     }
-    /* const dateOfLastTransaction =
-    checkedItem.totalPurchases > 0
-    ? checkedItem.purchasedDate
-    : checkedItem.createdAt;
-    const daysSinceLastTransaction =
-    (currentTime - dateOfLastTransaction) / oneDay;
-    
-    // if user checks a box, itemToUpdate is taken through this flow
-    if (e.target.checked) {
+  };
+  console.log(checkedItems);
+
+  const submitDataToDb = () => {
+    checkedItems.forEach((item) => {
+      const dateOfLastTransaction =
+        item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
+      const daysSinceLastTransaction =
+        (currentTime - dateOfLastTransaction) / oneDay;
+
       const dataToUpdate = {
         previousEstimate: calculateEstimate(
-          checkedItem.previousEstimate,
+          item.previousEstimate,
           daysSinceLastTransaction,
-          checkedItem.totalPurchases,
-          ),
-          totalPurchases: checkedItem.totalPurchases + 1,
-          purchasedDate: currentTime,
-        };
-        // dataToUpdate is sent to Firestore with updated values
-        setUpdateToDb(localToken, checkedItem.id, dataToUpdate);
-    } */
+          item.totalPurchases,
+        ),
+        totalPurchases: item.totalPurchases + 1,
+        purchasedDate: currentTime,
+      };
+      console.log(item);
+      // dataToUpdate is sent to Firestore with updated values
+      setUpdateToDb(localToken, item.id, dataToUpdate);
+    });
   };
 
   //persists checked box for 24 hours and used to disable a checkbox
@@ -208,7 +210,7 @@ const ListLayout = ({ items, localToken, loading }) => {
           <ImCross />
         </button>
         <br />
-        <button>Submit checked items</button>
+        <button onClick={submitDataToDb}>Submit checked items</button>
       </div>
       {
         // have attempted some logic to hide the group if there are no items in that group
