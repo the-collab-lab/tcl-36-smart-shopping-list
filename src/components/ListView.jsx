@@ -22,7 +22,7 @@ function ListView() {
     const unsubscribe = onSnapshot(collection(db, localToken), (snapshot) => {
       const snapshotDocs = [];
       snapshot.forEach((doc) => {
-        snapshotDocs.push({ ...doc.data(), id: doc.id });
+        snapshotDocs.push({ ...doc.data(), id: doc.id, checked: false });
       });
       setItems(snapshotDocs);
       setLoading(false);
@@ -42,7 +42,11 @@ function ListView() {
       {!loading && (
         <div className="m-20">
           {items.length ? (
-            <ListLayout items={items} localToken={localToken} />
+            <ListLayout
+              items={items}
+              localToken={localToken}
+              loading={loading}
+            />
           ) : (
             <Welcome />
           )}

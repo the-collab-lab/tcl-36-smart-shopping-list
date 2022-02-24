@@ -16,27 +16,85 @@ const deleteItemFromDb = async (token, itemId) => {
   await deleteDoc(doc(db, token, itemId));
 };
 
-const ListLayout = ({ items, localToken }) => {
+const ListLayout = ({ items, localToken, loading }) => {
   const [filter, setFilter] = useState('');
+  const [layoutItems, setLayoutItems] = useState(items);
+
+  const [checkedItems, setCheckedItems] = useState([]);
 
   const currentTime = Date.now();
   const oneDay = 86400000; //24 hours in milliseconds
   //create a reference for an input
   const inputRef = useRef(null);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     inputRef.current.focus();
+  }, []); */
+  // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
+  // isActive is defaulted to false when item is added
+  useEffect(() => {
+    if (!loading) {
+      items.forEach((item) => {
+        //if item was bought within 24 hours gap it should be checked
+        /*   item.checked = within24hours(item.purchasedDate); */
+
+        const dateOfLastTransaction =
+          item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
+        const daysSinceLastTransaction =
+          (currentTime - dateOfLastTransaction) / oneDay;
+        if (
+          item.totalPurchases > 1 &&
+          daysSinceLastTransaction < 2 * item.previousEstimate
+        ) {
+          let itemToUpdate = {
+            isActive: true,
+          };
+          setUpdateToDb(localToken, item.id, itemToUpdate);
+        }
+      });
+
+      let newList = [];
+      items.forEach((item) => {
+        newList.push({ ...item, checked: within24hours(item.purchasedDate) });
+      });
+      setLayoutItems(newList);
+    }
+    //suggested dependency array via React and I agree with the suggestion if anyone has thoughts on this please let me know!
   }, []);
 
-  const handleCheckboxChange = async (e, checkedItem) => {
-    console.log(checkedItem);
-    const dateOfLastTransaction =
-      checkedItem.totalPurchases > 0
-        ? checkedItem.purchasedDate
-        : checkedItem.createdAt;
-    const daysSinceLastTransaction =
-      (currentTime - dateOfLastTransaction) / oneDay;
+  console.log(layoutItems);
 
+  const handleCheckboxChange = async (e, checkedItem) => {
+    if (e.target.checked) {
+      checkedItem.checked = true;
+      checkedItems.push(checkedItem);
+      setCheckedItems(checkedItems);
+      let test = layoutItems.map((item) => {
+        if (item.id === checkedItem.id) {
+          item = checkedItem;
+        }
+        return item;
+      });
+      setLayoutItems(test);
+    } else {
+      checkedItem.checked = false;
+      let filtered = checkedItems.filter((item) => item.id !== checkedItem.id);
+      setCheckedItems(filtered);
+      let test = layoutItems.map((item) => {
+        if (item.id === checkedItem.id) {
+          item = checkedItem;
+        }
+        return item;
+      });
+      setLayoutItems(test);
+    }
+    /* const dateOfLastTransaction =
+    checkedItem.totalPurchases > 0
+    ? checkedItem.purchasedDate
+    : checkedItem.createdAt;
+    const daysSinceLastTransaction =
+    (currentTime - dateOfLastTransaction) / oneDay;
+    
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
       const dataToUpdate = {
@@ -44,16 +102,16 @@ const ListLayout = ({ items, localToken }) => {
           checkedItem.previousEstimate,
           daysSinceLastTransaction,
           checkedItem.totalPurchases,
-        ),
-        totalPurchases: checkedItem.totalPurchases + 1,
-        purchasedDate: currentTime,
-      };
-      // dataToUpdate is sent to Firestore with updated values
-      setUpdateToDb(localToken, checkedItem.id, dataToUpdate);
-    }
+          ),
+          totalPurchases: checkedItem.totalPurchases + 1,
+          purchasedDate: currentTime,
+        };
+        // dataToUpdate is sent to Firestore with updated values
+        setUpdateToDb(localToken, checkedItem.id, dataToUpdate);
+    } */
   };
 
-  //persists checked box for 24 hours
+  //persists checked box for 24 hours and used to disable a checkbox
   function within24hours(date) {
     let timeCheck = false;
     const gap = currentTime - date;
@@ -69,29 +127,8 @@ const ListLayout = ({ items, localToken }) => {
     }
   }
 
-  // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
-  // isActive is defaulted to false when item is added
-  useEffect(() => {
-    items.forEach((item) => {
-      const dateOfLastTransaction =
-        item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
-      const daysSinceLastTransaction =
-        (currentTime - dateOfLastTransaction) / oneDay;
-      if (
-        item.totalPurchases > 1 &&
-        daysSinceLastTransaction < 2 * item.previousEstimate
-      ) {
-        let itemToUpdate = {
-          isActive: true,
-        };
-        setUpdateToDb(localToken, item.id, itemToUpdate);
-      }
-    });
-    //suggested dependency array via React and I agree with the suggestion if anyone has thoughts on this please let me know!
-  }, [items, localToken, currentTime]);
-
   //filters items to only display items a user is searching by via the input bar
-  const filteredItems = items.filter((item) =>
+  const filteredItems = layoutItems.filter((item) =>
     item.id.includes(filter.toLowerCase()),
   );
 
@@ -133,7 +170,7 @@ const ListLayout = ({ items, localToken }) => {
       colorClass: 'bg-gray-200',
     },
   ];
-
+  console.log('render list');
   return (
     <>
       <label className="" htmlFor="search">
@@ -170,6 +207,8 @@ const ListLayout = ({ items, localToken }) => {
         >
           <ImCross />
         </button>
+        <br />
+        <button>Submit checked items</button>
       </div>
       {
         // have attempted some logic to hide the group if there are no items in that group
@@ -197,7 +236,7 @@ const ListLayout = ({ items, localToken }) => {
                         <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
                         <input
                           type="checkbox"
-                          checked={within24hours(item.purchasedDate)}
+                          checked={item.checked}
                           onChange={(e) => handleCheckboxChange(e, item)}
                           name={item.id}
                           aria-label={item.itemName}
