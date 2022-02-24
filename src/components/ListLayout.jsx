@@ -180,26 +180,29 @@ const ListLayout = ({ items, localToken }) => {
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-around">
               {filteredItems
                 //groupFilter is a callback that returns true if an item matches the criteria for group category
-                .filter((item) => group.groupFilter(item))
-                //the matching group items are then mapped together in the section they belong
-                .map((item, idx) => {
-                  return (
-                    <li className={`flex flex-col py-4`} key={idx}>
-                      <div className="flex">
-                        <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
-                        <input
-                          type="checkbox"
-                          checked={within24hours(item.purchasedDate)}
-                          onChange={(e) => handleCheckboxChange(e)}
-                          name={item.id}
-                          aria-label={item.itemName}
-                        />
-                      </div>
-                      <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
-                      <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
-                    </li>
-                  );
-                })}
+                .filter((item) => group.groupFilter(item)).length > 0
+                ? //the matching group items are then mapped together in the section they belong
+                  filteredItems
+                    .filter((item) => group.groupFilter(item))
+                    .map((item, idx) => {
+                      return (
+                        <li className={`flex flex-col py-4`} key={idx}>
+                          <div className="flex">
+                            <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
+                            <input
+                              type="checkbox"
+                              checked={within24hours(item.purchasedDate)}
+                              onChange={(e) => handleCheckboxChange(e)}
+                              name={item.id}
+                              aria-label={item.itemName}
+                            />
+                          </div>
+                          <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
+                          <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
+                        </li>
+                      );
+                    })
+                : 'There are no items needed in this time frame'}
             </ul>
           </section>
         ))
