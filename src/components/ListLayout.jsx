@@ -5,6 +5,7 @@ import { db } from '../lib/firebase';
 import { ImCross } from 'react-icons/im';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
+import toast, { Toaster } from 'react-hot-toast';
 
 // UPDATED this function to accommodate changes to multiple values on an item object
 const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
@@ -22,74 +23,84 @@ const ListLayout = ({ items, localToken, loading }) => {
 
   const [checkedItems, setCheckedItems] = useState([]);
 
-  const currentTime = Date.now();
   const oneDay = 86400000; //24 hours in milliseconds
   //create a reference for an input
+  const currentTime = Date.now();
   const inputRef = useRef(null);
 
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-  // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
-  // isActive is defaulted to false when item is added
+
   useEffect(() => {
-    if (!loading) {
-      items.forEach((item) => {
-        //if item was bought within 24 hours gap it should be checked
-        /*   item.checked = within24hours(item.purchasedDate); */
+    items.forEach((item) => {
+      // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
+      // isActive is defaulted to false when item is added
+      const dateOfLastTransaction =
+        item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
+      const daysSinceLastTransaction =
+        (currentTime - dateOfLastTransaction) / oneDay;
+      if (
+        item.totalPurchases > 1 &&
+        daysSinceLastTransaction < 2 * item.previousEstimate
+      ) {
+        let itemToUpdate = {
+          isActive: true,
+        };
+        setUpdateToDb(localToken, item.id, itemToUpdate);
+      }
+    });
+    //loop throught the items list and update item.checked property to true
+    //if item was bought within 24 hours gap
+    // checked is defaulted to false when item is added
+    let newList = [];
+    items.forEach((item) => {
+      newList.push({ ...item, checked: within24hours(item.purchasedDate) });
+    });
+    //update layoutItems state to new updated items list
+    setLayoutItems(newList);
 
-        const dateOfLastTransaction =
-          item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
-        const daysSinceLastTransaction =
-          (currentTime - dateOfLastTransaction) / oneDay;
-        if (
-          item.totalPurchases > 1 &&
-          daysSinceLastTransaction < 2 * item.previousEstimate
-        ) {
-          let itemToUpdate = {
-            isActive: true,
-          };
-          setUpdateToDb(localToken, item.id, itemToUpdate);
-        }
-      });
-
-      let newList = [];
-      items.forEach((item) => {
-        newList.push({ ...item, checked: within24hours(item.purchasedDate) });
-      });
-      setLayoutItems(newList);
-    }
-    //suggested dependency array via React and I agree with the suggestion if anyone has thoughts on this please let me know!
-  }, [items]);
+    //if currentTime or within24hours func. added to dependency array it creates an infinite loop
+    //any solutions?
+  }, [items, localToken]);
 
   const handleCheckboxChange = async (e, checkedItem) => {
     if (e.target.checked) {
-      checkedItem.checked = true;
-      checkedItems.push(checkedItem);
-      setCheckedItems(checkedItems);
-      let test = layoutItems.map((item) => {
+      checkedItems.push(checkedItem); //push checked item into array  for checkedItems
+
+      setCheckedItems(checkedItems); //update state for checkedItems array
+
+      const updatedList = layoutItems.map((item) => {
+        //find checked item in layoutItems list to update it's checked value
         if (item.id === checkedItem.id) {
-          item = checkedItem;
+          item = { ...checkedItem, checked: true };
         }
         return item;
       });
-      setLayoutItems(test);
+      setLayoutItems(updatedList); //update state for layoutItems list
     } else {
-      checkedItem.checked = false;
-      let filtered = checkedItems.filter((item) => item.id !== checkedItem.id);
-      setCheckedItems(filtered);
-      let test = layoutItems.map((item) => {
+      const filtered = checkedItems.filter(
+        //filter checkedItems list to remove checked item from it
+        (item) => item.id !== checkedItem.id,
+      );
+
+      setCheckedItems(filtered); //update state for checkedItems
+
+      const updatedList = layoutItems.map((item) => {
+        //find checked item in layoutItems list to update it's checked value
         if (item.id === checkedItem.id) {
-          item = checkedItem;
+          item = { ...checkedItem, checked: false }; //if checked item was checked before set ckecked value to false
         }
         return item;
       });
-      setLayoutItems(test);
+      setLayoutItems(updatedList); //update state for layoutItems list
     }
   };
-
+  //update and send data for each ckecked item indo db
+  //function invoked when button clicked
   const submitDataToDb = () => {
     checkedItems.forEach((item) => {
+      //for each item user checked update data and save it to database
       const dateOfLastTransaction =
         item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
       const daysSinceLastTransaction =
@@ -107,7 +118,11 @@ const ListLayout = ({ items, localToken, loading }) => {
       // dataToUpdate is sent to Firestore with updated values
       setUpdateToDb(localToken, item.id, dataToUpdate);
     });
-    setCheckedItems([]);
+    toast.success(
+      `${checkedItems.length} checked items was marked as purchased!`,
+    );
+
+    setCheckedItems([]); //reset checkedItems state to empty array
   };
 
   //persists checked box for 24 hours and used to disable a checkbox
@@ -172,6 +187,7 @@ const ListLayout = ({ items, localToken, loading }) => {
 
   return (
     <>
+      <Toaster />
       <label className="" htmlFor="search">
         Filter shopping list
       </label>
@@ -206,9 +222,20 @@ const ListLayout = ({ items, localToken, loading }) => {
         >
           <ImCross />
         </button>
-        <br />
-        <button onClick={submitDataToDb}>Submit checked items</button>
       </div>
+      <button
+        style={{
+          //ignore button style it will be changed accordingly to list style
+          backgroundColor: 'blue',
+          color: 'white',
+          padding: '2px',
+          marginTop: '5px',
+        }}
+        area-label="submit button to save items as purchased"
+        onClick={submitDataToDb}
+      >
+        Submit checked items
+      </button>
       {
         // have attempted some logic to hide the group if there are no items in that group
         // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
@@ -235,11 +262,11 @@ const ListLayout = ({ items, localToken, loading }) => {
                         <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
                         <input
                           type="checkbox"
-                          checked={item.checked}
+                          checked={item.checked} //if item was bought within 24 hours gap it should be checked
                           onChange={(e) => handleCheckboxChange(e, item)}
                           name={item.id}
                           aria-label={item.itemName}
-                          disabled={within24hours(item.purchasedDate)}
+                          disabled={within24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
                         />
                         <button
                           aria-label={`delete ${item.id} button`}
