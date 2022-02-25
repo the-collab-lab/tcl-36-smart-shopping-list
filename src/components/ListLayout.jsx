@@ -17,7 +17,7 @@ const deleteItemFromDb = async (token, itemId) => {
   await deleteDoc(doc(db, token, itemId));
 };
 
-const ListLayout = ({ items, localToken, loading }) => {
+const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
   const [layoutItems, setLayoutItems] = useState(items);
 

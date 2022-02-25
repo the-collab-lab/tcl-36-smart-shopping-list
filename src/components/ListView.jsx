@@ -8,7 +8,7 @@ import ListLayout from './ListLayout';
 function ListView() {
   const [items, setItems] = useState([]);
   //loading is true until list is retrieved from database, this value controls the component rendering
-  const [loading, setLoading] = useState(true);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
   const localToken = localStorage.getItem('list-token');
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function ListView() {
         snapshotDocs.push({ ...doc.data(), id: doc.id, checked: false });
       });
       setItems(snapshotDocs);
-      setLoading(false);
+      setIsDataLoading(false);
     });
     return () => {
       //Used to remove the snapshot listener when the component is unmounted/unsubscribed
@@ -36,16 +36,16 @@ function ListView() {
   //loading state controls page render to ensure items.length can evaluate after the items have been retrieved from firebase
   return (
     <>
-      {loading && (
+      {isDataLoading && (
         <img src="img/loading.gif" alt="loading" className="m-auto" />
       )}
-      {!loading && (
+      {!isDataLoading && (
         <div className="m-20">
           {items.length ? (
             <ListLayout
               items={items}
               localToken={localToken}
-              loading={loading}
+              loading={isDataLoading}
             />
           ) : (
             <Welcome />
