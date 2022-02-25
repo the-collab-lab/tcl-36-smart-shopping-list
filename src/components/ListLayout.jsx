@@ -25,7 +25,7 @@ const ListLayout = ({ items, localToken }) => {
 
   const oneDay = 86400000; //24 hours in milliseconds
   //create a reference for an input
-  const currentTime = Date.now();
+
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -33,6 +33,17 @@ const ListLayout = ({ items, localToken }) => {
   }, []);
 
   useEffect(() => {
+    //loop throught the items list and update item.checked property to true
+    //if item was bought within 24 hours gap
+    // checked is defaulted to false when item is added
+    const currentTime = Date.now();
+    let newList = [];
+    items.forEach((item) => {
+      newList.push({ ...item, checked: within24hours(item.purchasedDate) });
+    });
+    //update layoutItems state to new updated items list
+    setLayoutItems(newList);
+
     items.forEach((item) => {
       // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
       // isActive is defaulted to false when item is added
@@ -42,7 +53,8 @@ const ListLayout = ({ items, localToken }) => {
         (currentTime - dateOfLastTransaction) / oneDay;
       if (
         item.totalPurchases > 1 &&
-        daysSinceLastTransaction < 2 * item.previousEstimate
+        daysSinceLastTransaction < 2 * item.previousEstimate &&
+        item.isActive === false
       ) {
         let itemToUpdate = {
           isActive: true,
@@ -50,16 +62,6 @@ const ListLayout = ({ items, localToken }) => {
         setUpdateToDb(localToken, item.id, itemToUpdate);
       }
     });
-    //loop throught the items list and update item.checked property to true
-    //if item was bought within 24 hours gap
-    // checked is defaulted to false when item is added
-    let newList = [];
-    items.forEach((item) => {
-      newList.push({ ...item, checked: within24hours(item.purchasedDate) });
-    });
-    //update layoutItems state to new updated items list
-    setLayoutItems(newList);
-
     //if currentTime or within24hours func. added to dependency array it creates an infinite loop
     //any solutions?
   }, [items, localToken]);
@@ -99,6 +101,7 @@ const ListLayout = ({ items, localToken }) => {
   //update and send data for each ckecked item indo db
   //function invoked when button clicked
   const submitDataToDb = () => {
+    const currentTime = Date.now();
     checkedItems.forEach((item) => {
       //for each item user checked update data and save it to database
       const dateOfLastTransaction =
@@ -127,6 +130,7 @@ const ListLayout = ({ items, localToken }) => {
 
   //persists checked box for 24 hours and used to disable a checkbox
   function within24hours(date) {
+    const currentTime = Date.now();
     let timeCheck = false;
     const gap = currentTime - date;
     if (gap < oneDay) {
