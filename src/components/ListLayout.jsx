@@ -27,9 +27,9 @@ const ListLayout = ({ items, localToken, loading }) => {
   //create a reference for an input
   const inputRef = useRef(null);
 
-  /*  useEffect(() => {
+  useEffect(() => {
     inputRef.current.focus();
-  }, []); */
+  }, []);
   // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
   // isActive is defaulted to false when item is added
   useEffect(() => {
@@ -60,9 +60,7 @@ const ListLayout = ({ items, localToken, loading }) => {
       setLayoutItems(newList);
     }
     //suggested dependency array via React and I agree with the suggestion if anyone has thoughts on this please let me know!
-  }, []);
-
-  console.log(layoutItems);
+  }, [items]);
 
   const handleCheckboxChange = async (e, checkedItem) => {
     if (e.target.checked) {
@@ -89,7 +87,6 @@ const ListLayout = ({ items, localToken, loading }) => {
       setLayoutItems(test);
     }
   };
-  console.log(checkedItems);
 
   const submitDataToDb = () => {
     checkedItems.forEach((item) => {
@@ -107,10 +104,10 @@ const ListLayout = ({ items, localToken, loading }) => {
         totalPurchases: item.totalPurchases + 1,
         purchasedDate: currentTime,
       };
-      console.log(item);
       // dataToUpdate is sent to Firestore with updated values
       setUpdateToDb(localToken, item.id, dataToUpdate);
     });
+    setCheckedItems([]);
   };
 
   //persists checked box for 24 hours and used to disable a checkbox
@@ -172,7 +169,7 @@ const ListLayout = ({ items, localToken, loading }) => {
       colorClass: 'bg-gray-200',
     },
   ];
-  console.log('render list');
+
   return (
     <>
       <label className="" htmlFor="search">
