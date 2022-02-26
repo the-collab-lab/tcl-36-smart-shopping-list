@@ -37,14 +37,9 @@ const ListLayout = ({ items, localToken }) => {
     //if item was bought within 24 hours gap
     // checked is defaulted to false when item is added
     const currentTime = Date.now();
-    let newList = [];
-    items.forEach((item) => {
-      newList.push({ ...item, checked: within24hours(item.purchasedDate) });
-    });
-    //update layoutItems state to new updated items list
-    setLayoutItems(newList);
 
     items.forEach((item) => {
+      /*  console.log(item.id) */
       // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
       // isActive is defaulted to false when item is added
       const dateOfLastTransaction =
@@ -60,12 +55,34 @@ const ListLayout = ({ items, localToken }) => {
           isActive: true,
         };
         setUpdateToDb(localToken, item.id, itemToUpdate);
+      } else if (
+        item.totalPurchases > 1 &&
+        daysSinceLastTransaction > 2 * item.previousEstimate &&
+        item.isActive === true
+      ) {
+        let itemToUpdate = {
+          isActive: false,
+        };
+        setUpdateToDb(localToken, item.id, itemToUpdate);
       }
     });
+
+    let newList = [];
+    items.forEach((item) => {
+      console.log(item.checked);
+      newList.push({ ...item, checked: within24hours(item.purchasedDate) });
+      console.log(newList);
+    });
+    //update layoutItems state to new updated items list
+    setLayoutItems(newList);
+    console.log(layoutItems[17]);
+    console.log(items[17]);
     //if currentTime or within24hours func. added to dependency array it creates an infinite loop
     //any solutions?
   }, [items, localToken]);
 
+  console.log(items[17]);
+  console.log(layoutItems[17]);
   const handleCheckboxChange = async (e, checkedItem) => {
     if (e.target.checked) {
       checkedItems.push(checkedItem); //push checked item into array  for checkedItems
@@ -81,12 +98,12 @@ const ListLayout = ({ items, localToken }) => {
       });
       setLayoutItems(updatedList); //update state for layoutItems list
     } else {
-      const filtered = checkedItems.filter(
+      const filteredItems = checkedItems.filter(
         //filter checkedItems list to remove checked item from it
         (item) => item.id !== checkedItem.id,
       );
 
-      setCheckedItems(filtered); //update state for checkedItems
+      setCheckedItems(filteredItems); //update state for checkedItems
 
       const updatedList = layoutItems.map((item) => {
         //find checked item in layoutItems list to update it's checked value
