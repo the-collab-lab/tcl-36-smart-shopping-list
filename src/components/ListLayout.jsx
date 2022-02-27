@@ -14,7 +14,6 @@ const ListLayout = ({ items, localToken }) => {
 
   const [checkedItems, setCheckedItems] = useState([]);
 
-
   //create a reference for an input
 
   const inputRef = useRef(null);
@@ -23,20 +22,19 @@ const ListLayout = ({ items, localToken }) => {
     inputRef.current.focus();
   }, []);
 
-
   useEffect(() => {
     //loop throught the items list and update item.checked property to true
     //if item was bought within 24 hours gap
     // checked is defaulted to false when item is added
     const currentTime = Date.now();
-    
+
     items.forEach((item) => {
       // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
       // isActive is defaulted to false when item is added
       const dateOfLastTransaction =
         item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
       const daysSinceLastTransaction =
-        (currentTime - dateOfLastTransaction) / oneDay;
+        (currentTime - dateOfLastTransaction) / ONE_DAY_IN_MILLISECONDS;
       if (
         item.totalPurchases > 1 &&
         daysSinceLastTransaction < 2 * item.previousEstimate &&
@@ -60,13 +58,19 @@ const ListLayout = ({ items, localToken }) => {
 
     let newList = [];
     items.forEach((item) => {
-      newList.push({ ...item, checked: within24hours(item.purchasedDate) });
+      newList.push({ ...item, checked: isWithin24hours(item.purchasedDate) });
     });
     //update layoutItems state to new updated items list
     setLayoutItems(newList);
     //if currentTime or within24hours func. added to dependency array it creates an infinite loop
     //any solutions?
   }, [items, localToken]);
+
+  const deleteButtonPressed = (itemId, itemName) => {
+    if (window.confirm(`Are you sure you want to delete ${itemName}?`)) {
+      deleteItemFromDb(localToken, itemId);
+    }
+  };
 
   const handleCheckboxChange = (e, checkedItem) => {
     if (e.target.checked) {
@@ -129,7 +133,6 @@ const ListLayout = ({ items, localToken }) => {
 
     setCheckedItems([]); //reset checkedItems state to empty array
   };
-
 
   //filters items to only display items a user is searching by via the input bar
   const filteredItems = layoutItems.filter((item) =>
@@ -206,7 +209,8 @@ const ListLayout = ({ items, localToken }) => {
                 //groupFilter is a callback that returns true if an item matches the criteria for group category
                 .filter((item) => group.groupFilter(item)).length > 0 ? (
                 //the matching group items are then mapped together in the section they belong
-                .map((item, idx) => {
+
+                filteredItems.map((item, idx) => {
                   return (
                     <li className={`flex flex-col py-4`} key={idx}>
                       <div className="flex">
@@ -217,7 +221,7 @@ const ListLayout = ({ items, localToken }) => {
                           onChange={(e) => handleCheckboxChange(e, item)}
                           name={item.id}
                           aria-label={item.itemName}
-                          disabled={within24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
+                          disabled={isWithin24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
                         />
                         <button
                           aria-label={`delete ${item.id} button`}
@@ -233,8 +237,12 @@ const ListLayout = ({ items, localToken }) => {
                       <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
                     </li>
                   );
-                })}
-
+                })
+              ) : (
+                <p className="col-span-3">
+                  There are no items needed in this time frame
+                </p>
+              )}
             </ul>
           </section>
         ))
