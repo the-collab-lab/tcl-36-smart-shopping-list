@@ -76,7 +76,7 @@ const ListLayout = ({ items, localToken }) => {
     //any solutions?
   }, [items, localToken]);
 
-  const handleCheckboxChange = async (e, checkedItem) => {
+  const handleCheckboxChange = (e, checkedItem) => {
     if (e.target.checked) {
       checkedItems.push(checkedItem); //push checked item into array  for checkedItems
 
