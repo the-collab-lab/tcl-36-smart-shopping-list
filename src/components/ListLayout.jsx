@@ -1,21 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
-
-import { db } from '../lib/firebase';
+import { setUpdateToDb, deleteItemFromDb } from '../lib/firebase';
 import { ImCross } from 'react-icons/im';
+// delete button
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
-
-// UPDATED this function to accommodate changes to multiple values on an item object
-const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
-  const itemRef = doc(db, collection, itemId);
-  await updateDoc(itemRef, dataToUpdate);
-};
-//create a function to delete item from db
-const deleteItemFromDb = async (token, itemId) => {
-  await deleteDoc(doc(db, token, itemId));
-};
+import { ONE_DAY_IN_MILLISECONDS, isWithin24hours } from '../utilities';
+import { itemStatusGroups } from '../configuration';
 
 const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
@@ -23,7 +14,7 @@ const ListLayout = ({ items, localToken }) => {
 
   const [checkedItems, setCheckedItems] = useState([]);
 
-  const oneDay = 86400000; //24 hours in milliseconds
+
   //create a reference for an input
 
   const inputRef = useRef(null);
@@ -32,12 +23,13 @@ const ListLayout = ({ items, localToken }) => {
     inputRef.current.focus();
   }, []);
 
+
   useEffect(() => {
     //loop throught the items list and update item.checked property to true
     //if item was bought within 24 hours gap
     // checked is defaulted to false when item is added
     const currentTime = Date.now();
-
+    
     items.forEach((item) => {
       // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
       // isActive is defaulted to false when item is added
@@ -117,7 +109,7 @@ const ListLayout = ({ items, localToken }) => {
       const dateOfLastTransaction =
         item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
       const daysSinceLastTransaction =
-        (currentTime - dateOfLastTransaction) / oneDay;
+        (currentTime - dateOfLastTransaction) / ONE_DAY_IN_MILLISECONDS;
 
       const dataToUpdate = {
         previousEstimate: calculateEstimate(
@@ -138,66 +130,11 @@ const ListLayout = ({ items, localToken }) => {
     setCheckedItems([]); //reset checkedItems state to empty array
   };
 
-  //persists checked box for 24 hours and used to disable a checkbox
-  function within24hours(date) {
-    const currentTime = Date.now();
-    let timeCheck = false;
-    const gap = currentTime - date;
-    if (gap < oneDay) {
-      timeCheck = true;
-    }
-    return timeCheck;
-  }
-
-  function deleteButtonPressed(itemId, itemName) {
-    if (window.confirm(`Are you sure you want to delete ${itemName}?`)) {
-      deleteItemFromDb(localToken, itemId);
-    }
-  }
 
   //filters items to only display items a user is searching by via the input bar
   const filteredItems = layoutItems.filter((item) =>
     item.id.includes(filter.toLowerCase()),
   );
-
-  const groups = [
-    {
-      label: 'Soon',
-      sublabel: "We think you'll need this in less than 7 days",
-      groupFilter: (item) => {
-        return item.previousEstimate < 7 && item.isActive === true;
-      },
-      colorClass: 'bg-rose-100',
-    },
-    {
-      label: 'Kind of soon',
-      sublabel: "We think you'll need this in less than 30 days",
-      groupFilter: (item) => {
-        return (
-          item.previousEstimate >= 7 &&
-          item.previousEstimate < 30 &&
-          item.isActive === true
-        );
-      },
-      colorClass: 'bg-yellow-100',
-    },
-    {
-      label: 'Not soon',
-      sublabel: "We think you'll need this in more than 30 days",
-      groupFilter: (item) => {
-        return item.previousEstimate >= 30 && item.isActive === true;
-      },
-      colorClass: 'bg-green-100',
-    },
-    {
-      label: 'Inactive',
-      sublabel: "This item is inactive and hasn't been purchased recently",
-      groupFilter: (item) => {
-        return item.isActive === false;
-      },
-      colorClass: 'bg-gray-200',
-    },
-  ];
 
   return (
     <>
@@ -220,7 +157,7 @@ const ListLayout = ({ items, localToken }) => {
           </svg>
         </span>
         <input
-          className="text-black bg-violet-100 p-2 text-md bg-gray-900 rounded-md pl-10"
+          className="text-black bg-violet-100 p-2 text-md rounded-md pl-10"
           type="text"
           id="search"
           ref={inputRef}
@@ -253,7 +190,7 @@ const ListLayout = ({ items, localToken }) => {
       {
         // have attempted some logic to hide the group if there are no items in that group
         // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
-        groups.map((group, idx) => (
+        itemStatusGroups.map((group, idx) => (
           <section
             key={idx}
             className={`rounded-3xl p-12 ${group.colorClass} mt-6`}
@@ -267,7 +204,7 @@ const ListLayout = ({ items, localToken }) => {
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-around">
               {filteredItems
                 //groupFilter is a callback that returns true if an item matches the criteria for group category
-                .filter((item) => group.groupFilter(item))
+                .filter((item) => group.groupFilter(item)).length > 0 ? (
                 //the matching group items are then mapped together in the section they belong
                 .map((item, idx) => {
                   return (
@@ -297,6 +234,7 @@ const ListLayout = ({ items, localToken }) => {
                     </li>
                   );
                 })}
+
             </ul>
           </section>
         ))

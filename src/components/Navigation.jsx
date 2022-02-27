@@ -1,18 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-
-//might want to adjust these styles or take them out and replace with tailwind classes..
-const navStyles = {
-  position: 'fixed',
-  bottom: '0',
-  width: '100%',
-  textAlign: 'center',
-  backgroundColor: '#fff',
-};
+import { navButtonStyles } from '../configuration';
 
 export default function Navigation() {
   return (
-    <nav style={navStyles}>
+    <nav style={navButtonStyles}>
       <NavLink
         to="/addItemView"
         style={({ isActive }) => ({ fontWeight: isActive ? '800' : '' })}
