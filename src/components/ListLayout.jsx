@@ -1,26 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
-
-import { db } from '../lib/firebase';
+import { setUpdateToDb, deleteItemFromDb } from '../lib/firebase';
 import { ImCross } from 'react-icons/im';
+// delete button
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
-
-// UPDATED this function to accommodate changes to multiple values on an item object
-const setUpdateToDb = async (collection, itemId, dataToUpdate) => {
-  const itemRef = doc(db, collection, itemId);
-  await updateDoc(itemRef, dataToUpdate);
-};
-//create a function to delete item from db
-const deleteItemFromDb = async (token, itemId) => {
-  await deleteDoc(doc(db, token, itemId));
-};
+import { ONE_DAY_IN_MILLISECONDS, isWithin24hours } from '../utilities';
+import { itemStatusGroups } from '../configuration';
 
 const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
 
-  const currentTime = Date.now();
-  const oneDay = 86400000; //24 hours in milliseconds
   //create a reference for an input
   const inputRef = useRef(null);
 
@@ -29,12 +18,13 @@ const ListLayout = ({ items, localToken }) => {
   }, []);
 
   const handleCheckboxChange = async (e, checkedItem) => {
+    const currentTime = Date.now();
     const dateOfLastTransaction =
       checkedItem.totalPurchases > 0
         ? checkedItem.purchasedDate
         : checkedItem.createdAt;
     const daysSinceLastTransaction =
-      (currentTime - dateOfLastTransaction) / oneDay;
+      (currentTime - dateOfLastTransaction) / ONE_DAY_IN_MILLISECONDS;
 
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
@@ -52,31 +42,21 @@ const ListLayout = ({ items, localToken }) => {
     }
   };
 
-  //persists checked box for 24 hours
-  function within24hours(date) {
-    let timeCheck = false;
-    const gap = currentTime - date;
-    if (gap < oneDay) {
-      timeCheck = true;
-    }
-    return timeCheck;
-  }
-
-
-  function deleteButtonPressed(itemId, itemName) {
+  const deleteButtonPressed = (itemId, itemName) => {
     if (window.confirm(`Are you sure you want to delete ${itemName}?`)) {
       deleteItemFromDb(localToken, itemId);
     }
-  }
+  };
 
   // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
   // isActive is defaulted to false when item is added
   useEffect(() => {
+    const currentTime = Date.now();
     items.forEach((item) => {
       const dateOfLastTransaction =
         item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
       const daysSinceLastTransaction =
-        (currentTime - dateOfLastTransaction) / oneDay;
+        (currentTime - dateOfLastTransaction) / ONE_DAY_IN_MILLISECONDS;
       if (
         item.totalPurchases > 1 &&
         daysSinceLastTransaction < 2 * item.previousEstimate
@@ -88,52 +68,12 @@ const ListLayout = ({ items, localToken }) => {
       }
     });
     //suggested dependency array via React and I agree with the suggestion if anyone has thoughts on this please let me know!
-  }, [items, localToken, currentTime]);
+  }, [items, localToken]);
 
   //filters items to only display items a user is searching by via the input bar
   const filteredItems = items.filter((item) =>
     item.id.includes(filter.toLowerCase()),
   );
-
-  const groups = [
-    {
-      label: 'Soon',
-      sublabel: "We think you'll need this in less than 7 days",
-      groupFilter: (item) => {
-        return item.previousEstimate < 7 && item.isActive === true;
-      },
-      colorClass: 'bg-rose-100',
-    },
-    {
-      label: 'Kind of soon',
-      sublabel: "We think you'll need this in less than 30 days",
-      groupFilter: (item) => {
-        return (
-          item.previousEstimate >= 7 &&
-          item.previousEstimate < 30 &&
-          item.isActive === true
-        );
-      },
-      colorClass: 'bg-yellow-100',
-    },
-    {
-      label: 'Not soon',
-      sublabel: "We think you'll need this in more than 30 days",
-      groupFilter: (item) => {
-        return item.previousEstimate >= 30 && item.isActive === true;
-      },
-      colorClass: 'bg-green-100',
-    },
-    {
-      label: 'Inactive',
-      sublabel: "This item is inactive and hasn't been purchased recently",
-      groupFilter: (item) => {
-        return item.isActive === false;
-      },
-      colorClass: 'bg-gray-200',
-    },
-  ];
-
 
   return (
     <>
@@ -155,7 +95,7 @@ const ListLayout = ({ items, localToken }) => {
           </svg>
         </span>
         <input
-          className="text-black bg-violet-100 p-2 text-md bg-gray-900 rounded-md pl-10"
+          className="text-black bg-violet-100 p-2 text-md rounded-md pl-10"
           type="text"
           id="search"
           ref={inputRef}
@@ -175,7 +115,7 @@ const ListLayout = ({ items, localToken }) => {
       {
         // have attempted some logic to hide the group if there are no items in that group
         // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
-        groups.map((group, idx) => (
+        itemStatusGroups.map((group, idx) => (
           <section
             key={idx}
             className={`rounded-3xl p-12 ${group.colorClass} mt-6`}
@@ -198,18 +138,20 @@ const ListLayout = ({ items, localToken }) => {
                         <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
                         <input
                           type="checkbox"
-                          checked={within24hours(item.purchasedDate)}
+                          checked={isWithin24hours(item.purchasedDate)}
                           onChange={(e) => handleCheckboxChange(e)}
                           name={item.id}
                           aria-label={item.itemName}
                         />
-                         <button
-                            aria-label={`delete ${item.id} button`}
-                            className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
-                            onClick={() => deleteButtonPressed(item.id, item.itemName)}
-                         >
-                           <RiDeleteBin6Fill />
-                       </button>
+                        <button
+                          aria-label={`delete ${item.id} button`}
+                          className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
+                          onClick={() =>
+                            deleteButtonPressed(item.id, item.itemName)
+                          }
+                        >
+                          <RiDeleteBin6Fill />
+                        </button>
                       </div>
                       <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
                       <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
