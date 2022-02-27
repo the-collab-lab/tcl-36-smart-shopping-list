@@ -4,7 +4,8 @@ import { ImCross } from 'react-icons/im';
 // delete button
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
-import { ONE_DAY_IN_MILLISECONDS, isWithin24hours, groups } from '../utilities';
+import { ONE_DAY_IN_MILLISECONDS, isWithin24hours } from '../utilities';
+import { itemStatusGroups } from '../configuration';
 
 const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
@@ -114,7 +115,7 @@ const ListLayout = ({ items, localToken }) => {
       {
         // have attempted some logic to hide the group if there are no items in that group
         // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
-        groups.map((group, idx) => (
+        itemStatusGroups.map((group, idx) => (
           <section
             key={idx}
             className={`rounded-3xl p-12 ${group.colorClass} mt-6`}
