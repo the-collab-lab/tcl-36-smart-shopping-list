@@ -193,61 +193,65 @@ const ListLayout = ({ items, localToken }) => {
       {
         // have attempted some logic to hide the group if there are no items in that group
         // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
-        itemStatusGroups.map((group, idx) => (
-          <section
-            key={idx}
-            className={`rounded-3xl p-12 ${group.colorClass} mt-6`}
-          >
-            <div className="flex justify-between border-b-2">
-              <h1 className="text-xl font-semibold text-blue-700">
-                {group.label}
-              </h1>
-              <p className="text-gray-500">{group.sublabel}</p>
-            </div>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-around">
-              {filteredItems
-                //groupFilter is a callback that returns true if an item matches the criteria for group category
-                .filter((item) => group.groupFilter(item)).length > 0 ? (
-                //the matching group items are then mapped together in the section they belong
-
-                filteredItems
-                  .filter((item) => group.groupFilter(item))
-                  .map((item, idx) => {
-                    return (
-                      <li className={`flex flex-col py-4`} key={idx}>
-                        <div className="flex">
-                          <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
-                          <input
-                            type="checkbox"
-                            checked={item.checked} //if item was bought within 24 hours gap it should be checked
-                            onChange={(e) => handleCheckboxChange(e, item)}
-                            name={item.id}
-                            aria-label={item.itemName}
-                            disabled={isWithin24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
-                          />
-                          <button
-                            aria-label={`delete ${item.id} button`}
-                            className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
-                            onClick={() =>
-                              deleteButtonPressed(item.id, item.itemName)
-                            }
-                          >
-                            <RiDeleteBin6Fill />
-                          </button>
-                        </div>
-                        <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
-                        <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
-                      </li>
-                    );
-                  })
-              ) : (
-                <p className="col-span-3">
-                  There are no items needed in this time frame
-                </p>
-              )}
-            </ul>
-          </section>
-        ))
+        itemStatusGroups.map((group, idx) => {
+          //groupFilter is a callback that returns true if an item matches the criteria for group category
+          const itemsGrouped = filteredItems.filter((item) =>
+            group.groupFilter(item),
+          );
+          return (
+            <section
+              key={idx}
+              className={`rounded-3xl p-12 ${group.colorClass} mt-6`}
+            >
+              <div className="flex justify-between border-b-2">
+                <h1 className="text-xl font-semibold text-blue-700">
+                  {group.label}
+                </h1>
+                <p className="text-gray-500">{group.sublabel}</p>
+              </div>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-around">
+                {
+                  //this only checks if the group has any items
+                  itemsGrouped.length > 0 ? (
+                    //the matching group items are mapped together in the section they belong
+                    itemsGrouped.map((item, idx) => {
+                      return (
+                        <li className={`flex flex-col py-4`} key={idx}>
+                          <div className="flex">
+                            <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
+                            <input
+                              type="checkbox"
+                              checked={item.checked} //if item was bought within 24 hours gap it should be checked
+                              onChange={(e) => handleCheckboxChange(e, item)}
+                              name={item.id}
+                              aria-label={item.itemName}
+                              disabled={isWithin24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
+                            />
+                            <button
+                              aria-label={`delete ${item.id} button`}
+                              className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
+                              onClick={() =>
+                                deleteButtonPressed(item.id, item.itemName)
+                              }
+                            >
+                              <RiDeleteBin6Fill />
+                            </button>
+                          </div>
+                          <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
+                          <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
+                        </li>
+                      );
+                    })
+                  ) : (
+                    <p className="col-span-3">
+                      There are no items needed in this time frame
+                    </p>
+                  )
+                }
+              </ul>
+            </section>
+          );
+        })
       }
     </>
   );
