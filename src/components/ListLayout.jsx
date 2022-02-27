@@ -185,7 +185,13 @@ const ListLayout = ({ items, localToken }) => {
       {
         // have attempted some logic to hide the group if there are no items in that group
         // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
+
         itemStatusGroups.map((group, idx) => (
+          //groupFilter is a callback that returns true if an item matches the criteria for group category
+          const itemsGrouped = filteredItems.filter((item) =>
+            group.groupFilter(item),
+          );
+          return (
           <section
             key={idx}
             className={`rounded-3xl p-12 ${group.colorClass} mt-6`}
@@ -197,12 +203,11 @@ const ListLayout = ({ items, localToken }) => {
               <p className="text-gray-500">{group.sublabel}</p>
             </div>
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-around">
-              {filteredItems
-                //groupFilter is a callback that returns true if an item matches the criteria for group category
-                .filter((item) => group.groupFilter(item)).length > 0 ? (
-                //the matching group items are then mapped together in the section they belong
-
-                filteredItems.map((item, idx) => {
+               {
+                  //this only checks if the group has any items
+                  itemsGrouped.length > 0 ? (
+                    //the matching group items are mapped together in the section they belong
+                    itemsGrouped.map((item, idx) => {
                   return (
                     <li className={`flex flex-col py-4`} key={idx}>
                       <div className="flex">
