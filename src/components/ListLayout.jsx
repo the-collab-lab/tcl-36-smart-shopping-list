@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { setUpdateToDb, deleteItemFromDb } from '../lib/firebase';
 import { ImCross } from 'react-icons/im';
+// delete button
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
-import { oneDay, currentTime, within24hours, groups } from '../utils';
+import { ONE_DAY_IN_MILLISECONDS, isWithin24hours, groups } from '../utilities';
 
 const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
@@ -16,12 +17,13 @@ const ListLayout = ({ items, localToken }) => {
   }, []);
 
   const handleCheckboxChange = async (e, checkedItem) => {
+    const currentTime = Date.now();
     const dateOfLastTransaction =
       checkedItem.totalPurchases > 0
         ? checkedItem.purchasedDate
         : checkedItem.createdAt;
     const daysSinceLastTransaction =
-      (currentTime - dateOfLastTransaction) / oneDay;
+      (currentTime - dateOfLastTransaction) / ONE_DAY_IN_MILLISECONDS;
 
     // if user checks a box, itemToUpdate is taken through this flow
     if (e.target.checked) {
@@ -48,11 +50,12 @@ const ListLayout = ({ items, localToken }) => {
   // updates isActive property of item to true if item has 2+ purchases and has been purchased within calculated estimate
   // isActive is defaulted to false when item is added
   useEffect(() => {
+    const currentTime = Date.now();
     items.forEach((item) => {
       const dateOfLastTransaction =
         item.totalPurchases > 0 ? item.purchasedDate : item.createdAt;
       const daysSinceLastTransaction =
-        (currentTime - dateOfLastTransaction) / oneDay;
+        (currentTime - dateOfLastTransaction) / ONE_DAY_IN_MILLISECONDS;
       if (
         item.totalPurchases > 1 &&
         daysSinceLastTransaction < 2 * item.previousEstimate
@@ -134,7 +137,7 @@ const ListLayout = ({ items, localToken }) => {
                         <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
                         <input
                           type="checkbox"
-                          checked={within24hours(item.purchasedDate)}
+                          checked={isWithin24hours(item.purchasedDate)}
                           onChange={(e) => handleCheckboxChange(e)}
                           name={item.id}
                           aria-label={item.itemName}

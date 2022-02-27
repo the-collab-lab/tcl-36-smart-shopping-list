@@ -1,24 +1,5 @@
-// user selects one of these options when first adding an item to a list
-export const radioButtonOptions = [
-  {
-    option: 'soon',
-    value: 7,
-    defaultChecked: true,
-  },
-  {
-    option: 'kind of soon',
-    value: 14,
-    defaultChecked: false,
-  },
-  {
-    option: 'not soon',
-    value: 30,
-    defaultChecked: false,
-  },
-];
-
 //used to normalize item names when added by a user
-export const removePunctuation = (string) => {
+export const normalizeItemName = (string) => {
   const punctuationlessString = string
     .toLowerCase()
     .replace(/[^\w\s]|_/g, '')
@@ -28,16 +9,15 @@ export const removePunctuation = (string) => {
   return punctuationlessString;
 };
 
-// general variables used for time calculations
-export const currentTime = Date.now();
-export const oneDay = 86400000;
+export const ONE_DAY_IN_MILLISECONDS = 86400000;
 
 // used to determine if a checkbox can be unchecked
-export const within24hours = (date) => {
+export const isWithin24hours = (date) => {
+  let currentTime = Date.now();
   let timeCheck = false;
 
   const gap = currentTime - date;
-  if (gap < oneDay) {
+  if (gap < ONE_DAY_IN_MILLISECONDS) {
     timeCheck = true;
   }
   return timeCheck;
@@ -82,12 +62,3 @@ export const groups = [
     colorClass: 'bg-gray-200',
   },
 ];
-
-//might want to adjust these styles or take them out and replace with tailwind classes..
-export const navStyles = {
-  position: 'fixed',
-  bottom: '0',
-  width: '100%',
-  textAlign: 'center',
-  backgroundColor: '#fff',
-};

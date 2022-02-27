@@ -4,7 +4,8 @@ import { getDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
-import { radioButtonOptions, removePunctuation } from '../utils';
+import { normalizeItemName } from '../utilities';
+import { radioButtonOptions } from '../configuration';
 
 //duplicate item? sets isDuplicateFound to true, otherwise false
 //isDuplicateFound boolean gates form submission to database
@@ -31,7 +32,7 @@ function AddItem() {
   //retrieve the token from localStorage
   const localToken = localStorage.getItem('list-token');
   //save normalized users input to use as an unique key
-  const itemNameNormalized = removePunctuation(itemName);
+  const itemNameNormalized = normalizeItemName(itemName);
 
   useEffect(() => {
     if (!localToken) {
