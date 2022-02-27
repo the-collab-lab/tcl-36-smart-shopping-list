@@ -142,10 +142,7 @@ const ListLayout = ({ items, localToken }) => {
   return (
     <>
       <Toaster />
-      <label className="" htmlFor="search">
-        Filter shopping list
-      </label>
-      <div className="flex relative text-gray-600 focus-within:text-gray-400">
+      <div className="flex text-gray-600 focus-within:text-gray-400">
         <span className="absolute inset-y-0 left-0 flex items-center pl-2">
           <svg
             fill="none"
@@ -165,7 +162,7 @@ const ListLayout = ({ items, localToken }) => {
           id="search"
           ref={inputRef}
           value={filter}
-          placeholder="Filter"
+          placeholder="search"
           onChange={(e) => setFilter(e.target.value)}
           aria-label="filter the shopping list"
         ></input>
@@ -178,18 +175,13 @@ const ListLayout = ({ items, localToken }) => {
         </button>
       </div>
       <button
-        style={{
-          //ignore button style it will be changed accordingly to list style
-          backgroundColor: 'blue',
-          color: 'white',
-          padding: '2px',
-          marginTop: '5px',
-        }}
+        className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
         area-label="submit button to save items as purchased"
         onClick={submitDataToDb}
       >
         Submit checked items
       </button>
+
       {
         // have attempted some logic to hide the group if there are no items in that group
         // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
@@ -214,7 +206,7 @@ const ListLayout = ({ items, localToken }) => {
                   return (
                     <li className={`flex flex-col py-4`} key={idx}>
                       <div className="flex">
-                        <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
+                        <h4 className="px-4">{`${item.itemName}`}</h4>
                         <input
                           type="checkbox"
                           checked={item.checked} //if item was bought within 24 hours gap it should be checked
@@ -233,8 +225,6 @@ const ListLayout = ({ items, localToken }) => {
                           <RiDeleteBin6Fill />
                         </button>
                       </div>
-                      <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
-                      <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
                     </li>
                   );
                 })

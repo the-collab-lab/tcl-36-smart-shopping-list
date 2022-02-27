@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { normalizeItemName } from '../utilities';
 import { radioButtonOptions } from '../configuration';
+import Navigation from './Navigation';
 
 //duplicate item? sets isDuplicateFound to true, otherwise false
 //isDuplicateFound boolean gates form submission to database
@@ -80,45 +81,49 @@ function AddItem() {
   return (
     <>
       <Toaster />
+      <div className="container flex w-2/5 mx-auto">
+        <form method="post">
+          <label htmlFor="itemName">Item Name:</label>
+          <input
+            type="text"
+            id="itemName"
+            name="itemName"
+            ref={inputRef}
+            value={itemName}
+            className="ml-2 mb-4"
+            onChange={(e) => setItemName(e.target.value)}
+          ></input>
 
-      <form method="post">
-        <label htmlFor="itemName">Item Name:</label>
-        <input
-          type="text"
-          id="itemName"
-          name="itemName"
-          ref={inputRef}
-          value={itemName}
-          onChange={(e) => setItemName(e.target.value)}
-        ></input>
+          <fieldset>
+            <legend>Choose how soon you will buy this again</legend>
 
-        <fieldset>
-          <legend>Choose how soon you will buy this again</legend>
+            {radioButtonOptions.map((radioBtn, index) => (
+              <div key={index}>
+                <input
+                  type="radio"
+                  id={radioBtn.option}
+                  name="frequency"
+                  value={radioBtn.value}
+                  onChange={(e) => setFrequency(e.target.value)}
+                  defaultChecked={radioBtn.defaultChecked}
+                ></input>
+                <label htmlFor={radioBtn.option}>{radioBtn.option}</label>
+                <br />
+              </div>
+            ))}
+          </fieldset>
 
-          {radioButtonOptions.map((radioBtn, index) => (
-            <div key={index}>
-              <input
-                type="radio"
-                id={radioBtn.option}
-                name="frequency"
-                value={radioBtn.value}
-                onChange={(e) => setFrequency(e.target.value)}
-                defaultChecked={radioBtn.defaultChecked}
-              ></input>
-              <label htmlFor={radioBtn.option}>{radioBtn.option}</label>
-              <br />
-            </div>
-          ))}
-        </fieldset>
-
-        <button
-          type="submit"
-          disabled={!itemName} //button is disabled until user input an item name
-          onClick={handleSubmit}
-        >
-          Add Item
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
+            disabled={!itemName} //button is disabled until user input an item name
+            onClick={handleSubmit}
+          >
+            Add Item
+          </button>
+        </form>
+      </div>
+      <Navigation />
     </>
   );
 }
