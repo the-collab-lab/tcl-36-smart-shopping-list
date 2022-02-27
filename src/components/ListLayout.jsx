@@ -210,34 +210,36 @@ const ListLayout = ({ items, localToken }) => {
                 .filter((item) => group.groupFilter(item)).length > 0 ? (
                 //the matching group items are then mapped together in the section they belong
 
-                filteredItems.map((item, idx) => {
-                  return (
-                    <li className={`flex flex-col py-4`} key={idx}>
-                      <div className="flex">
-                        <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
-                        <input
-                          type="checkbox"
-                          checked={item.checked} //if item was bought within 24 hours gap it should be checked
-                          onChange={(e) => handleCheckboxChange(e, item)}
-                          name={item.id}
-                          aria-label={item.itemName}
-                          disabled={isWithin24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
-                        />
-                        <button
-                          aria-label={`delete ${item.id} button`}
-                          className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
-                          onClick={() =>
-                            deleteButtonPressed(item.id, item.itemName)
-                          }
-                        >
-                          <RiDeleteBin6Fill />
-                        </button>
-                      </div>
-                      <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
-                      <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
-                    </li>
-                  );
-                })
+                filteredItems
+                  .filter((item) => group.groupFilter(item))
+                  .map((item, idx) => {
+                    return (
+                      <li className={`flex flex-col py-4`} key={idx}>
+                        <div className="flex">
+                          <h4 className="px-4">{`Item Name: ${item.itemName}`}</h4>
+                          <input
+                            type="checkbox"
+                            checked={item.checked} //if item was bought within 24 hours gap it should be checked
+                            onChange={(e) => handleCheckboxChange(e, item)}
+                            name={item.id}
+                            aria-label={item.itemName}
+                            disabled={isWithin24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
+                          />
+                          <button
+                            aria-label={`delete ${item.id} button`}
+                            className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
+                            onClick={() =>
+                              deleteButtonPressed(item.id, item.itemName)
+                            }
+                          >
+                            <RiDeleteBin6Fill />
+                          </button>
+                        </div>
+                        <div className="px-4">{` Time until next purchase: ${item.previousEstimate}`}</div>
+                        <div className="px-4">{` Total purchases: ${item.totalPurchases}`}</div>
+                      </li>
+                    );
+                  })
               ) : (
                 <p className="col-span-3">
                   There are no items needed in this time frame
