@@ -53,13 +53,22 @@ function Home() {
     <div className="App">
       <main className="App-header">
         <Toaster />
-        <p>Our Shopping App</p>
-        <button onClick={handleNewList}>Create a New List</button>
+        <p className="text-2xl mb-4">Welcome to Smart Shopper.</p>
+        <p className="text-2xl mb-4">The app that learns how you shop!</p>
+        <button
+          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold py-1 px-4 border border-gray-400 rounded shadow"
+          onClick={handleNewList}
+        >
+          Create a New List
+        </button>
         <div>
-          <p>--Or--</p>
-          <p>Join an Existing List by Entering Three Word Token</p>
+          <p className="mt-10 mb-4 text-2xl">
+            Join an existing list by entering its three-word token.
+          </p>
         </div>
-        <label htmlFor="userToken">List Token:</label>
+        <label className="text-xl" htmlFor="userToken">
+          Enter List Token:
+        </label>
         <input
           type="text"
           id="userToken"
@@ -69,10 +78,11 @@ function Home() {
         ></input>
         <button
           type="submit"
+          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold mt-4 py-1 px-4 border border-gray-400 rounded shadow"
           disabled={!userToken} //button is disabled until user input an item name
           onClick={handleTokenSubmit}
         >
-          Join an existing list
+          Join an Existing List
         </button>
       </main>
     </div>

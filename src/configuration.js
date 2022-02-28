@@ -25,7 +25,7 @@ export const itemStatusGroups = [
     groupFilter: (item) => {
       return item.previousEstimate < 7 && item.isActive === true;
     },
-    colorClass: 'bg-rose-100',
+    colorClass: 'bg-white border-8 border-teal-500',
   },
   {
     label: 'Kind of soon',
@@ -37,7 +37,7 @@ export const itemStatusGroups = [
         item.isActive === true
       );
     },
-    colorClass: 'bg-yellow-100',
+    colorClass: 'bg-white border-8 border-amber-300',
   },
   {
     label: 'Not soon',
@@ -45,15 +45,15 @@ export const itemStatusGroups = [
     groupFilter: (item) => {
       return item.previousEstimate >= 30 && item.isActive === true;
     },
-    colorClass: 'bg-green-100',
+    colorClass: 'bg-white border-8 border-rose-500',
   },
   {
     label: 'Inactive',
-    sublabel: "This item is inactive and hasn't been purchased recently",
+    sublabel: "This item hasn't been purchased recently",
     groupFilter: (item) => {
       return item.isActive === false;
     },
-    colorClass: 'bg-gray-200',
+    colorClass: 'bg-white border-8 border-gray-500',
   },
 ];
 
@@ -63,5 +63,6 @@ export const navButtonStyles = {
   bottom: '0',
   width: '100%',
   textAlign: 'center',
-  backgroundColor: '#fff',
+  backgroundColor: '#0369a1',
+  padding: '1rem',
 };

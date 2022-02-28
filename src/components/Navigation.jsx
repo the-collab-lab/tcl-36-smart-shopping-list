@@ -8,6 +8,7 @@ export default function Navigation() {
       <NavLink
         to="/addItemView"
         style={({ isActive }) => ({ fontWeight: isActive ? '800' : '' })}
+        className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
       >
         Add an Item
       </NavLink>
@@ -15,6 +16,7 @@ export default function Navigation() {
       <NavLink
         to="/listView"
         style={({ isActive }) => ({ fontWeight: isActive ? '800' : '' })}
+        className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
       >
         List View
       </NavLink>
