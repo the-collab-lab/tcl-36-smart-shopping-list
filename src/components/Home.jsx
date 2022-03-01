@@ -73,7 +73,7 @@ function Home() {
           type="text"
           id="userToken"
           name="userToken"
-          className=" w-1/2"
+          className="w-2/5 text-black"
           value={userToken}
           onChange={(e) => setUserToken(e.target.value.toLowerCase())}
         ></input>
