@@ -142,7 +142,7 @@ const ListLayout = ({ items, localToken }) => {
       <Toaster />
       <div className="mx-auto w-1/2">
         {/* search and save features */}
-        <div className="top-20 flex py-2 px-12 bg-white rounded-3xl border-8 border-blue-500 text-gray-600 focus-within:text-gray-400">
+        <div className="top-20 sticky flex justify-between py-2 px-12 bg-sky-100 rounded-3xl text-gray-600 focus-within:text-gray-400">
           <div className="flex flex-col">
             <label htmlFor="purchasede" className="text-gray-500">
               Check items you have purchased today
@@ -160,7 +160,7 @@ const ListLayout = ({ items, localToken }) => {
             <label htmlFor="search" className="text-gray-500 pb-3">
               Search for items
             </label>
-            <div>
+            <div className="flex relative text-gray-600 focus-within:text-gray-400">
               <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                 <svg
                   fill="none"
@@ -176,7 +176,7 @@ const ListLayout = ({ items, localToken }) => {
               </span>
 
               <input
-                className="text-black bg-amber-100 p-2 text-md rounded-md pl-10"
+                className="text-black bg-white p-2 text-md rounded-md pl-10"
                 type="text"
                 id="search"
                 ref={inputRef}
