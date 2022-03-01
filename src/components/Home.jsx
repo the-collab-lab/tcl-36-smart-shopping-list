@@ -53,8 +53,6 @@ function Home() {
     <div className="App">
       <main className="App-header">
         <Toaster />
-        <p className="text-2xl mb-4">Welcome to Smart Shopper.</p>
-        <p className="text-2xl mb-4">The app that learns how you shop!</p>
         <button
           className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold py-1 px-4 border border-gray-400 rounded shadow"
           onClick={handleNewList}
