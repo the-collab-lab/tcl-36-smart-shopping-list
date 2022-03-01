@@ -142,7 +142,7 @@ const ListLayout = ({ items, localToken }) => {
       <Toaster />
       <div className="mx-auto w-1/2">
         {/* search and save features */}
-        <div className="fixed top-20 flex py-2 px-12 bg-white rounded-3xl border-8 border-blue-500 text-gray-600 focus-within:text-gray-400">
+        <div className="top-20 flex py-2 px-12 bg-white rounded-3xl border-8 border-blue-500 text-gray-600 focus-within:text-gray-400">
           <div className="flex flex-col">
             <label htmlFor="purchasede" className="text-gray-500">
               Check items you have purchased today
@@ -216,55 +216,65 @@ const ListLayout = ({ items, localToken }) => {
                   </h1>
                   <p className="text-gray-500">{group.sublabel}</p>
                 </div>
-                <table className="table-fixed text-center mx-auto">
-                  <thead>
-                    <th className="w-8 py-4 text-m text-gray-600">purchased</th>
-                    <th className="w-72 py-4 text-m text-gray-600">
-                      item name
-                    </th>
-                    <th className="py-4 text-m text-gray-600">delete</th>
-                  </thead>
-                  <tbody>
-                    {
-                      //this only checks if the group has any items
-                      itemsGrouped.length > 0 ? (
-                        //the matching group items are mapped together in the section they belong
-                        itemsGrouped.map((item, idx) => {
-                          return (
-                            <tr className="h-8">
-                              <td>
-                                <input
-                                  type="checkbox"
-                                  checked={item.checked} //if item was bought within 24 hours gap it should be checked
-                                  onChange={(e) =>
-                                    handleCheckboxChange(e, item)
-                                  }
-                                  name={item.id}
-                                  aria-label={item.itemName}
-                                  disabled={isWithin24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
-                                />
-                              </td>
-                              <td>{`${item.itemName}`}</td>
-                              <td>
-                                <button
-                                  aria-label={`delete ${item.id} button`}
-                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 rounded"
-                                  onClick={() =>
-                                    deleteButtonPressed(item.id, item.itemName)
-                                  }
-                                >
-                                  <RiDeleteBin6Fill />
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <p>No items in this category</p>
-                      )
-                    }
-                  </tbody>
-                </table>
+                {
+                  //this only checks if the group has any items
+                  itemsGrouped.length > 0 ? (
+                    <details open>
+                      <summary className="text-gray-500">Toggle List</summary>
+                      <table className="table-fixed text-center mx-auto">
+                        <thead>
+                          <th className="w-64 p-4 text-gray-600">item name</th>
+                          <th className="w-8 p-4 text-gray-600">purchased</th>
+                          <th className="w-8 p-4 text-gray-600">delete</th>
+                        </thead>
+                        <tbody>
+                          {
+                            //the matching group items are mapped together in the section they belong
+                            itemsGrouped.map((item, idx) => {
+                              return (
+                                <tr className="h-8">
+                                  <td>{`${item.itemName}`}</td>
+                                  <td>
+                                    <input
+                                      type="checkbox"
+                                      checked={item.checked} //if item was bought within 24 hours gap it should be checked
+                                      onChange={(e) =>
+                                        handleCheckboxChange(e, item)
+                                      }
+                                      name={item.id}
+                                      aria-label={item.itemName}
+                                      disabled={isWithin24hours(
+                                        item.purchasedDate,
+                                      )} //if item was bought within 24 hours gap it should be disabled
+                                    />
+                                  </td>
+                                  <td>
+                                    <button
+                                      aria-label={`delete ${item.id} button`}
+                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 rounded"
+                                      onClick={() =>
+                                        deleteButtonPressed(
+                                          item.id,
+                                          item.itemName,
+                                        )
+                                      }
+                                    >
+                                      <RiDeleteBin6Fill />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          }
+                        </tbody>
+                      </table>
+                    </details>
+                  ) : (
+                    <p className="text-gray-500">
+                      No items needed in this time frame
+                    </p>
+                  )
+                }
               </section>
             );
           })

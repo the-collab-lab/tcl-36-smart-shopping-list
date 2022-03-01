@@ -63,11 +63,11 @@ function Home() {
         </button>
         <div>
           <p className="mt-10 mb-4 text-2xl">
-            Join an existing list by entering its three-word token.
+            Join an existing list by using its three-word token.
           </p>
         </div>
         <label className="text-xl" htmlFor="userToken">
-          Enter List Token:
+          Enter Token:
         </label>
         <input
           type="text"

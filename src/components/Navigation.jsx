@@ -1,10 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { navButtonStyles } from '../configuration';
 
 export default function Navigation() {
   return (
-    <nav style={navButtonStyles}>
+    <nav className="sticky bottom-0 text-center py-4 bg-sky-700">
       <NavLink
         to="/addItemView"
         style={({ isActive }) => ({ fontWeight: isActive ? '800' : '' })}
