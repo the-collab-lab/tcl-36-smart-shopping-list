@@ -50,7 +50,7 @@ function Home() {
   };
 
   return (
-    <div className="leading-normal tracking-normal text-white bg-gradient-to-r from-blue-500 to-cyan-500 h-full">
+    <div className="leading-normal tracking-normal text-white h-auto">
       <div className="pt-12">
         <div className="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
           <div class="flex flex-col w-full md:w-3/6 justify-center items-start text-center md:text-left">
@@ -61,13 +61,16 @@ function Home() {
               Spend less time on lists, and more time shopping smarter.
             </p>
             <div className="flex space-x-2">
-              <button className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+              <button
+                className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+                onClick={handleNewList}
+              >
                 Get Started
               </button>
-              <button className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+              <button className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                 Join List
               </button>
-              <button className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+              <button className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                 Learn More
               </button>
             </div>
