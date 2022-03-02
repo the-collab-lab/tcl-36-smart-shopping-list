@@ -140,9 +140,9 @@ const ListLayout = ({ items, localToken }) => {
   return (
     <>
       <Toaster />
-      <div className="mx-auto w-1/2">
+      <div className="mx-auto w-5/6 md:w-1/2">
         {/* search and save features */}
-        <div className="top-20 sticky flex justify-between py-2 px-12 bg-sky-100 rounded-3xl text-gray-600 focus-within:text-gray-400">
+        <div className="top-20 sticky flex flex-col md:flex-row justify-between py-2 px-12 bg-sky-100 rounded-3xl text-gray-600 focus-within:text-gray-400">
           <div className="flex flex-col">
             <label htmlFor="purchasede" className="text-gray-500">
               Check items you have purchased today
@@ -208,9 +208,9 @@ const ListLayout = ({ items, localToken }) => {
             return (
               <section
                 key={idx}
-                className={`rounded-3xl p-12 ${group.colorClass} mt-6`}
+                className={`rounded-3xl p-2 md:p-12 ${group.colorClass} mt-6`}
               >
-                <div className="flex justify-between border-b-2">
+                <div className="flex flex-col md:flex-row justify-between border-b-2">
                   <h1 className="text-xl font-semibold text-blue-700">
                     {group.label}
                   </h1>
@@ -223,9 +223,15 @@ const ListLayout = ({ items, localToken }) => {
                       <summary className="text-gray-500">Toggle List</summary>
                       <table className="table-fixed text-center mx-auto">
                         <thead>
-                          <th className="w-64 p-4 text-gray-600">item name</th>
-                          <th className="w-8 p-4 text-gray-600">purchased</th>
-                          <th className="w-8 p-4 text-gray-600">delete</th>
+                          <th className="p-4 text-gray-600 hidden md:table-cell">
+                            item name
+                          </th>
+                          <th className="p-4 text-gray-600 hidden md:table-cell">
+                            purchased
+                          </th>
+                          <th className="p-4 text-gray-600 hidden md:table-cell">
+                            delete
+                          </th>
                         </thead>
                         <tbody>
                           {
@@ -237,6 +243,7 @@ const ListLayout = ({ items, localToken }) => {
                                   <td>
                                     <input
                                       type="checkbox"
+                                      className="ml-3 mr-6"
                                       checked={item.checked} //if item was bought within 24 hours gap it should be checked
                                       onChange={(e) =>
                                         handleCheckboxChange(e, item)
