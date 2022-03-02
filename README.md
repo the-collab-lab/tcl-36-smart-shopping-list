@@ -10,7 +10,7 @@
 - [User Guide](#User-Guide)
 - [Technologies](#Technologies)
 - [Installation](#Installation)
-- [Questions](#Questions)
+- [Contributors](#Contributors)
   <br>
 
 ## Summary
@@ -79,6 +79,17 @@ example placeholders left
 3. Start locally using `npm run start`
    <br></br>
 
-## Questions
+## Contributors
 
-Questions? Find our team at [/CONTRIBUTORS.md](https://github.com/the-collab-lab/tcl-36-smart-shopping-list/blob/main/CONTRIBUTORS.md)
+### Cohort Participants
+
+- [Shelley McHardy](https://github.com/shelleymcq) 🔥
+- [DJ Taylor](https://github.com/djtaylor8) ✨
+- [Lindsey Dinkel](https://github.com/lindseyindev) 😼
+- [Alena M](https://github.com/alenamedved) 🐻
+
+### Mentors
+
+- [Lauren Yu](https://github.com/laurenyz) 🐘
+- [Rudi P](https://github.com/rudidev08) 🦁
+- [Eddie H](https://github.com/EdwardHinkle) 🦉
