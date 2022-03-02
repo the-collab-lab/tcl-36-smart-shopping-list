@@ -51,9 +51,9 @@ function Home() {
 
   return (
     <div className="leading-normal tracking-normal text-white h-auto">
-      <div className="pt-12">
-        <div className="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
-          <div class="flex flex-col w-full md:w-3/6 justify-center items-start text-center md:text-left">
+      <div className="mt-12">
+        <div className="container px-3 mx-auto flex flex-wrap flex-col lg:flex-row items-center justify-between">
+          <div class="flex flex-col w-full md:w-1/2 justify-center items-start text-center md:text-left">
             <h1 class="my-4 text-6xl font-bold leading-tight font-Staatliches">
               Smart Shopper
             </h1>
@@ -81,7 +81,7 @@ function Home() {
               </button>
             </div>
           </div>
-          <div className="w-full md:w-3/6 py-6 text-center">
+          <div className="w-full md:w-1/2 py-6 text-center">
             <img
               className="w-full md:w-4/5 rounded-3xl shadow-2xl"
               src="img/shopping-cart-logo.jpg"
