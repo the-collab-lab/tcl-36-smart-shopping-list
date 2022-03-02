@@ -50,39 +50,37 @@ function Home() {
   };
 
   return (
-    <div className="App">
-      <main className="App-header">
-        <Toaster />
-        <button
-          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold py-1 px-4 border border-gray-400 rounded shadow"
-          onClick={handleNewList}
-        >
-          Create a New List
-        </button>
-        <div>
-          <p className="mt-10 mb-4 text-2xl">
-            Join an existing list by entering its three-word token.
-          </p>
+    <div className="leading-normal tracking-normal text-white bg-gradient-to-r from-blue-500 to-cyan-500 h-screen">
+      <div className="pt-12 h-screen">
+        <div className="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
+          <div class="flex flex-col w-full md:w-3/6 justify-center items-start text-center md:text-left">
+            <h1 class="my-4 text-6xl font-bold leading-tight font-Staatliches">
+              Smart Shopper
+            </h1>
+            <p className="leading-normal text-2xl mb-8 font-Staatliches">
+              Spend less time on lists, and more time shopping smarter.
+            </p>
+            <div className="flex space-x-2">
+              <button className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                Get Started
+              </button>
+              <button className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                Join List
+              </button>
+              <button className="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                Learn More
+              </button>
+            </div>
+          </div>
+          <div className="w-full md:w-3/6 py-6 text-center">
+            <img
+              className="w-full sm:w-3/6 z-50 rounded-3xl shadow-2xl"
+              src="img/shopping-cart-logo.jpg"
+              alt="shopping cart logo"
+            />
+          </div>
         </div>
-        <label className="text-xl" htmlFor="userToken">
-          Enter List Token:
-        </label>
-        <input
-          type="text"
-          id="userToken"
-          name="userToken"
-          value={userToken}
-          onChange={(e) => setUserToken(e.target.value.toLowerCase())}
-        ></input>
-        <button
-          type="submit"
-          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold mt-4 py-1 px-4 border border-gray-400 rounded shadow"
-          disabled={!userToken} //button is disabled until user input an item name
-          onClick={handleTokenSubmit}
-        >
-          Join an Existing List
-        </button>
-      </main>
+      </div>
     </div>
   );
 }
