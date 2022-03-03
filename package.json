@@ -7,6 +7,7 @@
     "@the-collab-lab/shopping-list-utils": "^1.0.3",
     "firebase": "^9.6.2",
     "react": "^17.0.1",
+    "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^17.0.1",
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.3.1",
