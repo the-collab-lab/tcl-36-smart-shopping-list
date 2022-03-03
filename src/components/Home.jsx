@@ -50,35 +50,36 @@ function Home() {
   };
 
   return (
-    <div className="App">
-      <main className="App-header">
+    <div className="text-center w-1/2 mx-auto">
+      <main className="flex flex-col flex-justify items-center text-white p-6 rounded-3xl border-8 border-teal-500">
         <Toaster />
         <p className="text-2xl mb-4">Welcome to Smart Shopper.</p>
         <p className="text-2xl mb-4">The app that learns how you shop!</p>
         <button
-          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold py-1 px-4 border border-gray-400 rounded shadow"
+          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold py-1 px-4 border border-gray-400 rounded shadow w-1/2"
           onClick={handleNewList}
         >
           Create a New List
         </button>
         <div>
           <p className="mt-10 mb-4 text-2xl">
-            Join an existing list by entering its three-word token.
+            Join an existing list by using its three-word token.
           </p>
         </div>
         <label className="text-xl" htmlFor="userToken">
-          Enter List Token:
+          Enter Token:
         </label>
         <input
           type="text"
           id="userToken"
           name="userToken"
+          className="w-2/5 text-black"
           value={userToken}
           onChange={(e) => setUserToken(e.target.value.toLowerCase())}
         ></input>
         <button
           type="submit"
-          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold mt-4 py-1 px-4 border border-gray-400 rounded shadow"
+          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold mt-4 py-1 px-4 border border-gray-400 rounded shadow w-1/2"
           disabled={!userToken} //button is disabled until user input an item name
           onClick={handleTokenSubmit}
         >
