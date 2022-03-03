@@ -7,6 +7,8 @@ import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
 import { ONE_DAY_IN_MILLISECONDS, isWithin24hours } from '../utilities';
 import { itemStatusGroups } from '../configuration';
+import ListNameCopy from './ListNameCopy';
+import ExitList from './ExitList';
 
 const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
@@ -142,6 +144,14 @@ const ListLayout = ({ items, localToken }) => {
   return (
     <>
       <Toaster />
+      <div style={{ display: 'flex', color: 'white' }}>
+        <p>
+          Your list name <strong>{localToken}</strong>
+        </p>{' '}
+        <ListNameCopy copyText={localToken} />
+        <ExitList />
+      </div>
+
       <div className="flex text-gray-600 focus-within:text-gray-400">
         <span className="absolute inset-y-0 left-0 flex items-center pl-2">
           <svg
