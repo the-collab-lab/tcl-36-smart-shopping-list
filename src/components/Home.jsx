@@ -4,6 +4,7 @@ import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { getToken } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
+import LearnMoreModal from './LearnMoreModal';
 
 function Home() {
   const [userToken, setUserToken] = useState('');
@@ -70,15 +71,12 @@ function Home() {
               <button
                 onClick={() => console.log('woo')}
                 className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModalScrollable"
               >
                 Join List
               </button>
-              <button
-                onClick={() => console.log('woooo!')}
-                className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-              >
-                Learn More
-              </button>
+              <LearnMoreModal />
             </div>
           </div>
           <div className="w-full md:w-1/2 py-6 text-center">
