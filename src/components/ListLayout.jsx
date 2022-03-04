@@ -129,9 +129,7 @@ const ListLayout = ({ items, localToken }) => {
       // dataToUpdate is sent to Firestore with updated values
       setUpdateToDb(localToken, item.id, dataToUpdate);
     });
-    toast.success(
-      `${checkedItems.length} checked items was marked as purchased!`,
-    );
+    toast.success(`${checkedItems.length} checked items marked as purchased!`);
 
     setCheckedItems([]); //reset checkedItems state to empty array
   };
@@ -144,116 +142,161 @@ const ListLayout = ({ items, localToken }) => {
   return (
     <>
       <Toaster />
-      <div style={{ display: 'flex', color: 'white' }}>
-        <p>
-          Your list name <strong>{localToken}</strong>
-        </p>{' '}
-        <ListNameCopy copyText={localToken} />
-        <ExitList />
-      </div>
-
-      <div className="flex text-gray-600 focus-within:text-gray-400">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-          <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            className="w-6 h-6"
-          >
-            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-        </span>
-        <input
-          className="text-black bg-violet-100 p-2 text-md rounded-md pl-10"
-          type="text"
-          id="search"
-          ref={inputRef}
-          value={filter}
-          placeholder="search"
-          onChange={(e) => setFilter(e.target.value)}
-          aria-label="filter the shopping list"
-        ></input>
-        <button
-          className="p-1 text-md rounded-md"
-          aria-label="clear input"
-          onClick={() => setFilter('')}
-        >
-          <ImCross />
-        </button>
-      </div>
-      <button
-        className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
-        area-label="submit button to save items as purchased"
-        onClick={submitDataToDb}
-      >
-        Submit checked items
-      </button>
-
-      {
-        // have attempted some logic to hide the group if there are no items in that group
-        // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
-
-        itemStatusGroups.map((group, idx) => {
-          //groupFilter is a callback that returns true if an item matches the criteria for group category
-          const itemsGrouped = filteredItems.filter((item) =>
-            group.groupFilter(item),
-          );
-          return (
-            <section
-              key={idx}
-              className={`rounded-3xl p-12 ${group.colorClass} mt-6`}
+      <div className="mx-auto w-5/6 md:w-1/2">
+        {/* search and save features */}
+        <div className="top-20 sticky flex flex-col md:flex-row justify-between py-2 px-12 bg-sky-100 rounded-3xl text-gray-600 focus-within:text-gray-400">
+          <div className="flex flex-col">
+            <label htmlFor="purchasede" className="text-gray-500">
+              Check items you have purchased today
+            </label>
+            <button
+              className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
+              area-label="submit button to save items as purchased"
+              onClick={submitDataToDb}
             >
-              <div className="flex justify-between border-b-2">
-                <h1 className="text-xl font-semibold text-blue-700">
-                  {group.label}
-                </h1>
-                <p className="text-gray-500">{group.sublabel}</p>
-              </div>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-around">
+              Save Purchases
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', color: 'white' }}>
+            <p>
+              Your list name <strong>{localToken}</strong>
+            </p>{' '}
+            <ListNameCopy copyText={localToken} />
+            <ExitList />
+          </div>
+
+          <div className="flex flex-col relative">
+            <label htmlFor="search" className="text-gray-500 pb-3">
+              Search for items
+            </label>
+            <div className="flex relative text-gray-600 focus-within:text-gray-400">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  className="w-6 h-6"
+                >
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </span>
+
+              <input
+                className="text-black bg-white p-2 text-md rounded-md pl-10"
+                type="text"
+                id="search"
+                ref={inputRef}
+                value={filter}
+                placeholder="search"
+                onChange={(e) => setFilter(e.target.value)}
+                aria-label="filter the shopping list"
+              ></input>
+              <button
+                className="p-1 text-md rounded-md"
+                aria-label="clear input"
+                onClick={() => setFilter('')}
+              >
+                <ImCross />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {
+          // have attempted some logic to hide the group if there are no items in that group
+          // need to access items first before groups probably doing filter and map first with groups.map nested inside *refactoring item*
+
+          itemStatusGroups.map((group, idx) => {
+            //groupFilter is a callback that returns true if an item matches the criteria for group category
+            const itemsGrouped = filteredItems.filter((item) =>
+              group.groupFilter(item),
+            );
+            return (
+              <section
+                key={idx}
+                className={`rounded-3xl p-2 md:p-12 ${group.colorClass} mt-6`}
+              >
+                <div className="flex flex-col md:flex-row justify-between border-b-2">
+                  <h1 className="text-xl font-semibold text-blue-700">
+                    {group.label}
+                  </h1>
+                  <p className="text-gray-500">{group.sublabel}</p>
+                </div>
                 {
                   //this only checks if the group has any items
                   itemsGrouped.length > 0 ? (
-                    //the matching group items are mapped together in the section they belong
-                    itemsGrouped.map((item, idx) => {
-                      return (
-                        <li className={`flex flex-col py-4`} key={idx}>
-                          <div className="flex">
-                            <h4 className="px-4">{`${item.itemName}`}</h4>
-                            <input
-                              type="checkbox"
-                              checked={item.checked} //if item was bought within 24 hours gap it should be checked
-                              onChange={(e) => handleCheckboxChange(e, item)}
-                              name={item.id}
-                              aria-label={item.itemName}
-                              disabled={isWithin24hours(item.purchasedDate)} //if item was bought within 24 hours gap it should be disabled
-                            />
-                            <button
-                              aria-label={`delete ${item.id} button`}
-                              className="bg-blue-500 hover:bg-blue-700 text-white ml-4 font-bold py-1 px-1 rounded"
-                              onClick={() =>
-                                deleteButtonPressed(item.id, item.itemName)
-                              }
-                            >
-                              <RiDeleteBin6Fill />
-                            </button>
-                          </div>
-                        </li>
-                      );
-                    })
+                    <details open>
+                      <summary className="text-gray-500">Toggle List</summary>
+                      <table className="table-fixed text-center mx-auto">
+                        <thead>
+                          <th className="p-4 text-gray-600 hidden md:table-cell">
+                            item name
+                          </th>
+                          <th className="p-4 text-gray-600 hidden md:table-cell">
+                            purchased
+                          </th>
+                          <th className="p-4 text-gray-600 hidden md:table-cell">
+                            delete
+                          </th>
+                        </thead>
+                        <tbody>
+                          {
+                            //the matching group items are mapped together in the section they belong
+                            itemsGrouped.map((item, idx) => {
+                              return (
+                                <tr className="h-8">
+                                  <td>{`${item.itemName}`}</td>
+                                  <td>
+                                    <input
+                                      type="checkbox"
+                                      className="ml-3 mr-6"
+                                      checked={item.checked} //if item was bought within 24 hours gap it should be checked
+                                      onChange={(e) =>
+                                        handleCheckboxChange(e, item)
+                                      }
+                                      name={item.id}
+                                      aria-label={item.itemName}
+                                      disabled={isWithin24hours(
+                                        item.purchasedDate,
+                                      )} //if item was bought within 24 hours gap it should be disabled
+                                    />
+                                  </td>
+                                  <td>
+                                    <button
+                                      aria-label={`delete ${item.id} button`}
+                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 rounded"
+                                      onClick={() =>
+                                        deleteButtonPressed(
+                                          item.id,
+                                          item.itemName,
+                                        )
+                                      }
+                                    >
+                                      <RiDeleteBin6Fill />
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          }
+                        </tbody>
+                      </table>
+                    </details>
                   ) : (
-                    <p className="col-span-3">
-                      There are no items needed in this time frame
+                    <p className="text-gray-500">
+                      No items needed in this time frame
                     </p>
                   )
                 }
-              </ul>
-            </section>
-          );
-        })
-      }
+              </section>
+            );
+          })
+        }
+      </div>
     </>
   );
 };

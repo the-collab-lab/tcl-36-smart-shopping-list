@@ -56,13 +56,3 @@ export const itemStatusGroups = [
     colorClass: 'bg-white border-8 border-gray-500',
   },
 ];
-
-//TODO remove this from Navigatio component and replace with Tailwind classes
-export const navButtonStyles = {
-  position: 'fixed',
-  bottom: '0',
-  width: '100%',
-  textAlign: 'center',
-  backgroundColor: '#0369a1',
-  padding: '1rem',
-};

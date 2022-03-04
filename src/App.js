@@ -4,8 +4,6 @@ import AddItemView from './components/AddItem';
 import ListView from './components/ListView';
 import Home from './components/Home';
 
-import './App.css';
-
 function App() {
   return (
     <>

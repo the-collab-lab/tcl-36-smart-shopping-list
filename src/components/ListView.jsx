@@ -41,7 +41,7 @@ function ListView() {
         <img src="img/loading.gif" alt="loading" className="m-auto" />
       )}
       {!isDataLoading && (
-        <div className="m-20">
+        <div className="m-25">
           {items.length ? (
             <ListLayout
               items={items}

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 function Welcome() {
   return (
     <>
-      <h1 className="font-Karma text-black text-center text-4xl my-4">
+      <h1 className="font-Karma text-white text-center text-4xl my-4">
         Welcome!
       </h1>
 
