@@ -51,7 +51,7 @@ function Home() {
   };
 
   return (
-    <div className="leading-normal tracking-normal text-white h-auto">
+    <div className="ml-0 leading-normal tracking-normal text-white h-auto">
       <div className="mt-12">
         <div className="container px-3 mx-auto flex flex-wrap flex-col lg:flex-row items-center justify-between">
           <div class="flex flex-col w-full md:w-1/2 justify-center items-start text-center md:text-left">
@@ -61,21 +61,25 @@ function Home() {
             <p className="leading-normal text-2xl mb-8 font-Staatliches">
               Spend less time on lists, and more time shopping smarter.
             </p>
-            <div className="flex space-x-2">
-              <button
-                className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-                onClick={handleNewList}
-              >
-                Get Started
-              </button>
-              <button
-                onClick={() => console.log('woo')}
-                className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModalScrollable"
-              >
-                Join List
-              </button>
+            <div className="flex">
+              <div className="mr-2">
+                <button
+                  className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+                  onClick={handleNewList}
+                >
+                  Get Started
+                </button>
+              </div>
+              <div className="mr-2">
+                <button
+                  onClick={() => console.log('woo')}
+                  className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModalScrollable"
+                >
+                  Join List
+                </button>
+              </div>
               <LearnMoreModal />
             </div>
           </div>
