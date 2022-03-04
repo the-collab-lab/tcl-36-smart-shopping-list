@@ -2,6 +2,37 @@ import React from 'react';
 
 export default function Modal() {
   const [showModal, setShowModal] = React.useState(false);
+
+  const renderAboutText = () => {
+    return (
+      <div className="text-mostlyBlack">
+        <ul className="list-disc">
+          <li>
+            Here for the first time? Click <strong>Get Started</strong> to start
+            a new list and add your items.
+          </li>
+          <li>
+            If you're looking to join an existing list, click{' '}
+            <strong>Join List</strong> to enter your code.
+          </li>
+          <li>
+            Once you add items to your list, you can see your items by going to{' '}
+            <strong>List View</strong>.
+          </li>
+          <li>
+            You will have the option to check items off as you purchase them.
+            When you're done, click <strong>Submit checked items</strong> to
+            save your changes.
+          </li>
+          <li>
+            Over time, you will see your items automagically move into different
+            groups based on how often you purchase them. Before you know it,
+            you'll be a smart shopper!
+          </li>
+        </ul>
+      </div>
+    );
+  };
   return (
     <>
       <button
@@ -17,24 +48,24 @@ export default function Modal() {
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">Modal Title</h3>
+                  <h3 className="text-3xl font-semibold text-mostlyBlack">
+                    Welcome to Smart Shopper!
+                  </h3>
                   <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    className="p-1 ml-auto bg-transparent text-mostlyBlack border-0 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
                   >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                    <span className="bg-transparent text-mostlyBlack h-6 w-6 text-2xl block outline-none focus:outline-none">
                       ×
                     </span>
                   </button>
                 </div>
                 <div className="relative p-6 flex-auto">
-                  <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                    {' '}
-                  </p>
+                  {renderAboutText()}
                 </div>
                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                   <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    className="text-rose-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
                     onClick={() => setShowModal(false)}
                   >
