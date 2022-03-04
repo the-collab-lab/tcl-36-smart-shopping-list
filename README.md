@@ -10,7 +10,7 @@
 - [User Guide](#User-Guide)
 - [Technologies](#Technologies)
 - [Installation](#Installation)
-- [Contributors](#Contributors)
+- [Development Team](#Development-Team)
   <br>
 
 ## Summary
@@ -79,9 +79,9 @@ example placeholders left
 3. Start locally using `npm run start`
    <br></br>
 
-## Contributors
+## Development Team
 
-### Cohort Participants
+### Developers
 
 - [Shelley McHardy](https://github.com/shelleymcq) 🔥
 - [DJ Taylor](https://github.com/djtaylor8) ✨

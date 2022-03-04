@@ -2,6 +2,28 @@
 
 ## Smart Shopping List
 
+<br></br>
+
+### Development Team:
+
+### Developers
+
+- [Shelley McHardy](https://github.com/shelleymcq) 🔥
+- [DJ Taylor](https://github.com/djtaylor8) ✨
+- [Lindsey Dinkel](https://github.com/lindseyindev) 😼
+- [Alena M](https://github.com/alenamedved) 🐻
+
+### Mentors
+
+- [Lauren Yu](https://github.com/laurenyz) 🐘
+- [Rudi P](https://github.com/rudidev08) 🦁
+- [Eddie H](https://github.com/EdwardHinkle) 🦉
+
+<br></br>
+
+<hr></hr>
+<br></br>
+
 ### Locations for things
 
 - Site: https://tcl-36-smart-shopping-list.web.app
