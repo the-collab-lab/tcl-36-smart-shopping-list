@@ -92,6 +92,32 @@ function Home() {
     );
   };
 
+  const showButtons = () => {
+    return (
+      <div className="flex">
+        <div className="mr-2">
+          <button
+            className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+            onClick={handleNewList}
+          >
+            Get Started
+          </button>
+        </div>
+        <div className="mr-2">
+          <button
+            onClick={() => setJoinListForm(true)}
+            className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModalScrollable"
+          >
+            Join List
+          </button>
+        </div>
+        <LearnMoreModal />
+      </div>
+    );
+  };
+
   return (
     <div className="ml-0 leading-normal tracking-normal text-white h-auto">
       <Toaster />
@@ -104,27 +130,7 @@ function Home() {
             <p className="leading-normal text-2xl mb-8 font-Staatliches">
               Spend less time on lists, and more time shopping smarter.
             </p>
-            <div className="flex">
-              <div className="mr-2">
-                <button
-                  className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-                  onClick={handleNewList}
-                >
-                  Get Started
-                </button>
-              </div>
-              <div className="mr-2">
-                <button
-                  onClick={() => setJoinListForm(true)}
-                  className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModalScrollable"
-                >
-                  Join List
-                </button>
-              </div>
-              <LearnMoreModal />
-            </div>
+            {!showJoinListForm && showButtons()}
             {showJoinListForm && joinListForm()}
           </div>
           <div className="w-full md:w-1/2 py-6 text-center">
