@@ -8,7 +8,7 @@ import LearnMoreModal from './LearnMoreModal';
 
 function Home() {
   const [userToken, setUserToken] = useState('');
-
+  const [showJoinListForm, setJoinListForm] = useState(false);
   const navigate = useNavigate();
 
   //check for existing token and go to List View if it is there
@@ -50,8 +50,51 @@ function Home() {
     }
   };
 
+  const joinListForm = () => {
+    return (
+      <>
+        <form className="w-full max-w-sm mt-6">
+          <div class="md:flex md:items-center mb-3">
+            <div className="md:w-2/3">
+              <input
+                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white"
+                id="userToken"
+                name="userToken"
+                value={userToken}
+                onChange={(e) =>
+                  setUserToken(e.target.value.toLocaleLowerCase())
+                }
+                placeholder="Enter Code"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="md:flex md:items-center">
+            <div className="md:w-2/3 space-x-2">
+              <button
+                className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+                onClick={handleTokenSubmit}
+                type="button"
+              >
+                Submit
+              </button>
+              <button
+                className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+                onClick={() => setJoinListForm(false)}
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </>
+    );
+  };
+
   return (
     <div className="ml-0 leading-normal tracking-normal text-white h-auto">
+      <Toaster />
       <div className="mt-12">
         <div className="container px-3 mx-auto flex flex-wrap flex-col lg:flex-row items-center justify-between">
           <div class="flex flex-col w-full md:w-1/2 justify-center items-start text-center md:text-left">
@@ -72,7 +115,7 @@ function Home() {
               </div>
               <div className="mr-2">
                 <button
-                  onClick={() => console.log('woo')}
+                  onClick={() => setJoinListForm(true)}
                   className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModalScrollable"
@@ -82,6 +125,7 @@ function Home() {
               </div>
               <LearnMoreModal />
             </div>
+            {showJoinListForm && joinListForm()}
           </div>
           <div className="w-full md:w-1/2 py-6 text-center">
             <img

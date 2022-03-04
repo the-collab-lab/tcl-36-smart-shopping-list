@@ -33,6 +33,7 @@ export default function Modal() {
       </div>
     );
   };
+
   return (
     <>
       <button
