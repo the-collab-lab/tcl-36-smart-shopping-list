@@ -232,15 +232,17 @@ const ListLayout = ({ items, localToken }) => {
                       <summary className="text-gray-500">Toggle List</summary>
                       <table className="table-fixed text-center mx-auto">
                         <thead>
-                          <th className="p-4 text-gray-600 hidden md:table-cell">
-                            item name
-                          </th>
-                          <th className="p-4 text-gray-600 hidden md:table-cell">
-                            purchased
-                          </th>
-                          <th className="p-4 text-gray-600 hidden md:table-cell">
-                            delete
-                          </th>
+                          <tr>
+                            <th className="p-4 text-gray-600 hidden md:table-cell">
+                              item name
+                            </th>
+                            <th className="p-4 text-gray-600 hidden md:table-cell">
+                              purchased
+                            </th>
+                            <th className="p-4 text-gray-600 hidden md:table-cell">
+                              delete
+                            </th>
+                          </tr>
                         </thead>
                         <tbody>
                           {
