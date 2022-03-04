@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo:wght@200&family=Inconsolata:wght@500&family=Staatliches&display=swap&family=Karma:wght@500&display=swap');
 body {
   margin: 0;
-  background-color: #0369a1;
+  height: 100vh;
+  background: linear-gradient(90deg, #0369a1 0%, #14b8a6 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;

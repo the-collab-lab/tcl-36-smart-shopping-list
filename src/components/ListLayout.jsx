@@ -250,7 +250,11 @@ const ListLayout = ({ items, localToken }) => {
                             itemsGrouped.map((item, idx) => {
                               return (
                                 <tr key={item.id} className="h-8">
-                                  <td>{`${item.itemName}`}</td>
+                                  <td>
+                                    <label
+                                      htmlFor={item.id}
+                                    >{`${item.itemName}`}</label>
+                                  </td>
                                   <td>
                                     <input
                                       type="checkbox"
@@ -260,6 +264,7 @@ const ListLayout = ({ items, localToken }) => {
                                         handleCheckboxChange(e, item)
                                       }
                                       name={item.id}
+                                      id={item.id}
                                       aria-label={item.itemName}
                                       disabled={isWithin24hours(
                                         item.purchasedDate,

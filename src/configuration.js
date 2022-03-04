@@ -25,7 +25,7 @@ export const itemStatusGroups = [
     groupFilter: (item) => {
       return item.previousEstimate < 7 && item.isActive === true;
     },
-    colorClass: 'from-teal-500 via-teal-600 to-amber-300',
+    colorClass: 'from-teal-500 via-teal-600 to-teal-300',
   },
   {
     label: 'Kind of soon',
@@ -37,7 +37,7 @@ export const itemStatusGroups = [
         item.isActive === true
       );
     },
-    colorClass: 'from-amber-300 via-amber-400 to-rose-500',
+    colorClass: 'from-amber-500 via-amber-600 to-amber-300',
   },
   {
     label: 'Not soon',
@@ -45,7 +45,7 @@ export const itemStatusGroups = [
     groupFilter: (item) => {
       return item.previousEstimate >= 30 && item.isActive === true;
     },
-    colorClass: 'from-rose-500 via-rose-600 to-gray-500',
+    colorClass: 'from-rose-500 via-rose-600 to-rose-300',
   },
   {
     label: 'Inactive',
