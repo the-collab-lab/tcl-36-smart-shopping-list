@@ -8,7 +8,7 @@ import LearnMoreModal from './LearnMoreModal';
 
 function Home() {
   const [userToken, setUserToken] = useState('');
-  const [showJoinListForm, setJoinListForm] = useState(false);
+  const [showJoinListForm, setShowJoinListForm] = useState(false);
   const navigate = useNavigate();
 
   //check for existing token and go to List View if it is there
@@ -72,6 +72,7 @@ function Home() {
           <div class="md:flex md:items-center">
             <div className="md:w-2/3 space-x-2">
               <button
+                aria-label="submit"
                 className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
                 onClick={handleTokenSubmit}
                 type="button"
@@ -79,8 +80,9 @@ function Home() {
                 Submit
               </button>
               <button
+                aria-label="cancel"
                 className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-                onClick={() => setJoinListForm(false)}
+                onClick={() => setShowJoinListForm(false)}
                 type="button"
               >
                 Cancel
@@ -97,6 +99,7 @@ function Home() {
       <div className="flex">
         <div className="mr-2">
           <button
+            aria-label="get started button"
             className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
             onClick={handleNewList}
           >
@@ -105,7 +108,8 @@ function Home() {
         </div>
         <div className="mr-2">
           <button
-            onClick={() => setJoinListForm(true)}
+            aria-label="join list button"
+            onClick={() => setShowJoinListForm(true)}
             className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
             data-bs-toggle="modal"
             data-bs-target="#exampleModalScrollable"

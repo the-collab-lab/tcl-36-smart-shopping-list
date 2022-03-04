@@ -37,6 +37,7 @@ export default function Modal() {
   return (
     <>
       <button
+        aria-label="open learn more modal"
         className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
         type="button"
         onClick={() => setShowModal(true)}
@@ -53,6 +54,7 @@ export default function Modal() {
                     Welcome to Smart Shopper!
                   </h3>
                   <button
+                    aria-label="close learn more modal"
                     className="p-1 ml-auto bg-transparent text-mostlyBlack border-0 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowModal(false)}
                   >
@@ -66,6 +68,7 @@ export default function Modal() {
                 </div>
                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                   <button
+                    aria-label="close learn more modal"
                     className="text-rose-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
                     onClick={() => setShowModal(false)}
