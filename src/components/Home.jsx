@@ -53,7 +53,7 @@ function Home() {
   const joinListForm = () => {
     return (
       <>
-        <form className="w-full max-w-sm mt-6">
+        <form className="w-full max-w-sm mt-6 row-start-4 row-span-2">
           <div class="md:flex md:items-center mb-3">
             <div className="md:w-2/3">
               <input
@@ -97,26 +97,22 @@ function Home() {
   const showButtons = () => {
     return (
       <div className="flex">
-        <div className="mr-2">
-          <button
-            aria-label="get started button"
-            className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-            onClick={handleNewList}
-          >
-            Get Started
-          </button>
-        </div>
-        <div className="mr-2">
-          <button
-            aria-label="join list button"
-            onClick={() => setShowJoinListForm(true)}
-            className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModalScrollable"
-          >
-            Join List
-          </button>
-        </div>
+        <button
+          aria-label="get started button"
+          className="bg-white mr-2 text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+          onClick={handleNewList}
+        >
+          Get Started
+        </button>
+        <button
+          aria-label="join list button"
+          onClick={() => setShowJoinListForm(true)}
+          className="bg-white mr-2 text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModalScrollable"
+        >
+          Join List
+        </button>
         <LearnMoreModal />
       </div>
     );
@@ -126,18 +122,18 @@ function Home() {
     <div className="ml-0 leading-normal tracking-normal text-white h-auto">
       <Toaster />
       <div className="mt-12">
-        <div className="container px-3 mx-auto flex flex-wrap flex-col lg:flex-row items-center justify-between">
-          <div class="flex flex-col w-full md:w-1/2 justify-center items-start text-center md:text-left">
-            <h1 class="my-4 text-6xl font-bold leading-tight font-Staatliches">
+        <div className="md:items-center container px-3 mx-auto flex flex-wrap flex-col lg:flex-row items-center justify-between">
+          <div class="grid grid-rows-5 flex-col w-full md:w-1/2 justify-center items-start text-center md:text-left">
+            <h1 class="self-end my-4 text-6xl font-bold leading-tight font-Staatliches">
               Smart Shopper
             </h1>
             <p className="leading-normal text-2xl mb-8 font-Staatliches">
               Spend less time on lists, and more time shopping smarter.
             </p>
-            {!showJoinListForm && showButtons()}
+            {showButtons()}
             {showJoinListForm && joinListForm()}
           </div>
-          <div className="w-full md:w-1/2 py-6 text-center">
+          <div className="w-full md:w-1/2 py-6 text-center order-first lg:order-last">
             <img
               className="w-full md:w-4/5 rounded-3xl shadow-2xl"
               src="img/shopping-cart-logo.jpg"
