@@ -2,15 +2,13 @@ import React from 'react';
 
 function GradientFrame({ children, colorClass }) {
   return (
-    <>
-      <section
-        className={`rounded-3xl  mx-auto  mt-6 p-2 bg-gradient-to-b ${colorClass}`}
-      >
-        <div className="flex flex-col justify-between  py-10 bg-white rounded-3xl p-4">
-          {children}
-        </div>
-      </section>
-    </>
+    <section
+      className={`rounded-3xl  mx-auto  mt-6 p-2 bg-gradient-to-b ${colorClass}`}
+    >
+      <div className="flex flex-col justify-between  py-10 bg-white rounded-3xl p-4">
+        {children}
+      </div>
+    </section>
   );
 }
 
