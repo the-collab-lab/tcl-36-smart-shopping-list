@@ -9,6 +9,7 @@ import { ONE_DAY_IN_MILLISECONDS, isWithin24hours } from '../utilities';
 import { itemStatusGroups } from '../configuration';
 import ListNameCopy from './ListNameCopy';
 import ExitList from './ExitList';
+import GradientFrame from './GradientFrame';
 
 const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState('');
@@ -142,7 +143,7 @@ const ListLayout = ({ items, localToken }) => {
   return (
     <>
       <Toaster />
-      <div className="mx-auto w-5/6 md:w-1/2">
+      <div className="mx-auto w-5/6 md:w-4/5">
         {/* search and save features */}
         <div className="top-20 sticky flex flex-col md:flex-row justify-between py-2 px-12 bg-sky-100 rounded-3xl text-gray-600 focus-within:text-gray-400">
           <div className="flex flex-col">
@@ -216,16 +217,14 @@ const ListLayout = ({ items, localToken }) => {
               group.groupFilter(item),
             );
             return (
-              <section
-                key={idx}
-                className={`rounded-3xl p-2 md:p-12 ${group.colorClass} mt-6`}
-              >
+              <GradientFrame key={idx} colorClass={group.colorClass}>
                 <div className="flex flex-col md:flex-row justify-between border-b-2">
                   <h1 className="text-xl font-semibold text-blue-700">
                     {group.label}
                   </h1>
                   <p className="text-gray-500">{group.sublabel}</p>
                 </div>
+
                 {
                   //this only checks if the group has any items
                   itemsGrouped.length > 0 ? (
@@ -233,23 +232,29 @@ const ListLayout = ({ items, localToken }) => {
                       <summary className="text-gray-500">Toggle List</summary>
                       <table className="table-fixed text-center mx-auto">
                         <thead>
-                          <th className="p-4 text-gray-600 hidden md:table-cell">
-                            item name
-                          </th>
-                          <th className="p-4 text-gray-600 hidden md:table-cell">
-                            purchased
-                          </th>
-                          <th className="p-4 text-gray-600 hidden md:table-cell">
-                            delete
-                          </th>
+                          <tr>
+                            <th className="p-4 text-gray-600 hidden md:table-cell">
+                              item name
+                            </th>
+                            <th className="p-4 text-gray-600 hidden md:table-cell">
+                              purchased
+                            </th>
+                            <th className="p-4 text-gray-600 hidden md:table-cell">
+                              delete
+                            </th>
+                          </tr>
                         </thead>
                         <tbody>
                           {
                             //the matching group items are mapped together in the section they belong
                             itemsGrouped.map((item, idx) => {
                               return (
-                                <tr className="h-8">
-                                  <td>{`${item.itemName}`}</td>
+                                <tr key={item.id} className="h-8">
+                                  <td>
+                                    <label
+                                      htmlFor={item.id}
+                                    >{`${item.itemName}`}</label>
+                                  </td>
                                   <td>
                                     <input
                                       type="checkbox"
@@ -259,6 +264,7 @@ const ListLayout = ({ items, localToken }) => {
                                         handleCheckboxChange(e, item)
                                       }
                                       name={item.id}
+                                      id={item.id}
                                       aria-label={item.itemName}
                                       disabled={isWithin24hours(
                                         item.purchasedDate,
@@ -292,7 +298,7 @@ const ListLayout = ({ items, localToken }) => {
                     </p>
                   )
                 }
-              </section>
+              </GradientFrame>
             );
           })
         }

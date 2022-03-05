@@ -50,7 +50,7 @@ function Home() {
   };
 
   return (
-    <div className="text-center w-1/2 mx-auto">
+    <div className="text-center w-3/4 md:w-1/2 mx-auto">
       <main className="flex flex-col flex-justify items-center text-white p-6 rounded-3xl border-8 border-teal-500">
         <Toaster />
         <p className="text-2xl mb-4">Welcome to Smart Shopper.</p>
