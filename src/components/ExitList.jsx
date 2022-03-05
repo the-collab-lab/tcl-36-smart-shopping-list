@@ -18,15 +18,17 @@ const ExitList = () => {
   };
 
   return (
-    <IconContext.Provider value={{ color: 'tomato', size: '1.2em' }}>
-      <button
-        onClick={exitList}
-        aria-label="button to exit current list"
-        style={{ paddingLeft: '10px' }}
-      >
-        <ImExit />
-      </button>
-    </IconContext.Provider>
+    <>
+      <IconContext.Provider value={{ color: 'tomato', size: '1.2em' }}>
+        <button
+          onClick={exitList}
+          aria-label="button to exit current list"
+          className="flex flex-row items-center whitespace-pre "
+        >
+          <ImExit /> Logout
+        </button>
+      </IconContext.Provider>
+    </>
   );
 };
 export default ExitList;

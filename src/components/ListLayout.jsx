@@ -1,28 +1,18 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { setUpdateToDb, deleteItemFromDb } from '../lib/firebase';
-import { ImCross } from 'react-icons/im';
 // delete button
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
 import { ONE_DAY_IN_MILLISECONDS, isWithin24hours } from '../utilities';
 import { itemStatusGroups } from '../configuration';
-import ListNameCopy from './ListNameCopy';
-import ExitList from './ExitList';
+import Header from './Header';
 
 const ListLayout = ({ items, localToken }) => {
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState(''); //*
   const [layoutItems, setLayoutItems] = useState(items);
 
   const [checkedItems, setCheckedItems] = useState([]);
-
-  //create a reference for an input
-
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
 
   useEffect(() => {
     //loop throught the items list and update item.checked property to true
@@ -137,75 +127,13 @@ const ListLayout = ({ items, localToken }) => {
   //filters items to only display items a user is searching by via the input bar
   const filteredItems = layoutItems.filter((item) =>
     item.id.includes(filter.toLowerCase()),
-  );
+  ); //*
 
   return (
     <>
+      <Header layoutItems={layoutItems} filter={filter} setFilter={setFilter} />
       <Toaster />
       <div className="mx-auto w-5/6 md:w-1/2">
-        {/* search and save features */}
-        <div className="top-20 sticky flex flex-col md:flex-row justify-between py-2 px-12 bg-sky-100 rounded-3xl text-gray-600 focus-within:text-gray-400">
-          <div className="flex flex-col">
-            <label htmlFor="purchasede" className="text-gray-500">
-              Check items you have purchased today
-            </label>
-            <button
-              className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
-              area-label="submit button to save items as purchased"
-              onClick={submitDataToDb}
-            >
-              Save Purchases
-            </button>
-          </div>
-
-          <div style={{ display: 'flex', color: 'white' }}>
-            <p>
-              Your list name <strong>{localToken}</strong>
-            </p>{' '}
-            <ListNameCopy copyText={localToken} />
-            <ExitList />
-          </div>
-
-          <div className="flex flex-col relative">
-            <label htmlFor="search" className="text-gray-500 pb-3">
-              Search for items
-            </label>
-            <div className="flex relative text-gray-600 focus-within:text-gray-400">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  className="w-6 h-6"
-                >
-                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-              </span>
-
-              <input
-                className="text-black bg-white p-2 text-md rounded-md pl-10"
-                type="text"
-                id="search"
-                ref={inputRef}
-                value={filter}
-                placeholder="search"
-                onChange={(e) => setFilter(e.target.value)}
-                aria-label="filter the shopping list"
-              ></input>
-              <button
-                className="p-1 text-md rounded-md"
-                aria-label="clear input"
-                onClick={() => setFilter('')}
-              >
-                <ImCross />
-              </button>
-            </div>
-          </div>
-        </div>
-
         {itemStatusGroups.map((group, idx) => {
           const itemsGrouped = filteredItems.filter((item) =>
             //groupFilter is a callback that returns true if an item matches the criteria for group category
@@ -291,6 +219,22 @@ const ListLayout = ({ items, localToken }) => {
             </section>
           );
         })}
+
+        {/* search and save features */}
+        <div className="sticky bottom-0 text-center py-4 bg-sky-400 flex flex-col md:flex-row justify-between py-2 px-12 rounded-3xl text-gray-600 focus-within:text-black">
+          <div className="flex flex-col md:flex-row items-center">
+            <label htmlFor="purchased" className="text-black">
+              Check items you have purchased today and click to save
+            </label>
+            <button
+              className="bg-sky-600 hover:bg-sky-400 text-black font-bold py-2 px-2 rounded md:mx-4"
+              area-label="submit button to save items as purchased"
+              onClick={submitDataToDb}
+            >
+              Save Purchases
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

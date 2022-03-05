@@ -4,7 +4,6 @@ import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Welcome from './Welcome';
 import ListLayout from './ListLayout';
-import Navigation from './Navigation';
 
 function ListView() {
   const [items, setItems] = useState([]);
@@ -53,7 +52,6 @@ function ListView() {
           )}
         </div>
       )}
-      <Navigation />
     </>
   );
 }
