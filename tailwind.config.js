@@ -28,6 +28,7 @@ module.exports = {
         yellow: colors.yellow,
         amber: colors.amber,
         mostlyBlack: '#080404',
+        black: colors.black,
       },
     },
   },
