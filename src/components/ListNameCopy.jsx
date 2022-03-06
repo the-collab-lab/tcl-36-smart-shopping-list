@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { HiClipboardCopy } from 'react-icons/hi';
+import { IconContext } from 'react-icons';
 
 export default function ListNameCopy({ copyText }) {
   const [isCopied, setIsCopied] = useState(false);
@@ -16,9 +18,14 @@ export default function ListNameCopy({ copyText }) {
     <>
       <Toaster />
       <CopyToClipboard text={copyText}>
-        <button onClick={handleCopyClick} className="px-2">
-          <span>{isCopied ? 'Copied!' : 'Copy'}</span>
-        </button>
+        <IconContext.Provider value={{ color: 'tomato', size: '1.6em' }}>
+          <button
+            onClick={handleCopyClick}
+            className="hover:text-tomato text-xl flex flex-row items-center whitespace-pre mx-4"
+          >
+            <HiClipboardCopy /> {isCopied ? ' Copied!' : ' Copy'}
+          </button>
+        </IconContext.Provider>
       </CopyToClipboard>
     </>
   );

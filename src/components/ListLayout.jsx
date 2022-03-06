@@ -212,28 +212,29 @@ const ListLayout = ({ items, localToken }) => {
                   </details>
                 ) : (
                   <p className="text-gray-500">
-                    No items needed in this time frame
+                    {filter.length > 0
+                      ? 'No matching items'
+                      : 'No items needed within this time frame'}
                   </p>
                 )
               }
             </section>
           );
         })}
-
-        {/* search and save features */}
-        <div className="sticky bottom-0 text-center py-4 bg-sky-400 flex flex-col md:flex-row justify-between py-2 px-12 rounded-3xl text-gray-600 focus-within:text-black">
-          <div className="flex flex-col md:flex-row items-center">
-            <label htmlFor="purchased" className="text-black">
-              Check items you have purchased today and click to save
-            </label>
-            <button
-              className="bg-sky-600 hover:bg-sky-400 text-black font-bold py-2 px-2 rounded md:mx-4"
-              area-label="submit button to save items as purchased"
-              onClick={submitDataToDb}
-            >
-              Save Purchases
-            </button>
-          </div>
+      </div>
+      <div className="text-offWhite bg-teal-700 font-DM-Sans sticky bottom-0 border-t md:flex justify-center p-4 pt-0 shadow-lg md:pt-4 ">
+        <div className="flex flex-col md:flex-row items-center">
+          <label htmlFor="purchased" className="text-center">
+            Check the items you have purchased today and click 'save purchases'
+            to update your list
+          </label>
+          <button
+            className="bg-teal-800 hover:bg-sky-800 font-bold py-2 px-2 rounded md:mx-4"
+            area-label="submit button to save items as purchased"
+            onClick={submitDataToDb}
+          >
+            Save Purchases
+          </button>
         </div>
       </div>
     </>

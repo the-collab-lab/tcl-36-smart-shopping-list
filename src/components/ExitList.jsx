@@ -19,11 +19,11 @@ const ExitList = () => {
 
   return (
     <>
-      <IconContext.Provider value={{ color: 'tomato', size: '1.2em' }}>
+      <IconContext.Provider value={{ color: 'tomato', size: '1.4em' }}>
         <button
           onClick={exitList}
           aria-label="button to exit current list"
-          className="flex flex-row items-center whitespace-pre "
+          className="hover:text-tomato text-xl flex flex-row items-center whitespace-pre "
         >
           <ImExit /> Logout
         </button>
