@@ -4,6 +4,7 @@ import { db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import Welcome from './Welcome';
 import ListLayout from './ListLayout';
+import Header from './Header';
 
 function ListView() {
   const [items, setItems] = useState([]);
@@ -50,7 +51,10 @@ function ListView() {
               />
             </>
           ) : (
-            <Welcome />
+            <>
+              <Header display={'hidden'} />
+              <Welcome />
+            </>
           )}
         </div>
       )}

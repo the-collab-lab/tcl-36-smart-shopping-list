@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { normalizeItemName } from '../utilities';
 import { radioButtonOptions } from '../configuration';
-import Navigation from './Navigation';
+import Header from './Header';
 
 //duplicate item? sets isDuplicateFound to true, otherwise false
 //isDuplicateFound boolean gates form submission to database
@@ -80,8 +80,9 @@ function AddItem() {
 
   return (
     <>
+      <Header display={'hidden'} />
       <Toaster />
-      <div className="container flex w-3/4 md:w-1/2 mx-auto p-8 rounded-3xl border-8 border-teal-500 bg-white">
+      <div className="container mt-2 flex w-3/4 md:w-1/2 mx-auto p-8 rounded-3xl border-8 border-teal-500 bg-white">
         <form method="post">
           <label htmlFor="itemName">Item Name:</label>
           <input
@@ -123,7 +124,6 @@ function AddItem() {
           </button>
         </form>
       </div>
-      <Navigation />
     </>
   );
 }

@@ -4,7 +4,7 @@ import ListNameCopy from './ListNameCopy';
 import ExitList from './ExitList';
 import { ImCross } from 'react-icons/im';
 
-const Header = ({ filter, setFilter }) => {
+const Header = ({ filter, setFilter, display }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const localToken = localStorage.getItem('list-token');
@@ -66,7 +66,7 @@ const Header = ({ filter, setFilter }) => {
           <ListNameCopy copyText={localToken} />
           <ExitList />
         </div>
-        <div className="flex flex-col relative my-2">
+        <div className={`flex flex-col relative my-2 ${display}`}>
           <div className="flex relative text-gray-600 focus-within:text-gray-400">
             <span className="absolute inset-y-0 left-0 flex items-center pl-2">
               <svg
