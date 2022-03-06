@@ -10,6 +10,8 @@ module.exports = {
         Exo: ['Exo', 'sans-serif'],
         Inconsolata: ['Inconsolata', 'sans-serif'],
         Karma: ['Karma', 'sans-serif'],
+        Shippori: ['Shippori Antique B1', 'sans-serif'],
+        'DM-Sans': ['DM Sans', 'sans-serif'],
       },
       colors: {
         stone: colors.stone,
@@ -29,6 +31,8 @@ module.exports = {
         amber: colors.amber,
         mostlyBlack: '#080404',
         black: colors.black,
+        offWhite: '#F5F5F5',
+        tomato: '#FF6347',
       },
     },
   },
