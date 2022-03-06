@@ -79,6 +79,7 @@ function AddItem() {
     <>
       <Header display={'hidden'} />
       <Toaster />
+      {/* tailwindcss classes for styling (border, background) and responsiveness (width based on screen size) */}
       <div className="container mt-2 flex w-3/4 md:w-1/2 mx-auto p-8 rounded-3xl border-8 border-teal-500 bg-white">
         <form method="post">
           <label htmlFor="itemName">Item Name:</label>
@@ -110,7 +111,7 @@ function AddItem() {
               </div>
             ))}
           </fieldset>
-
+          {/* tailwindcss classes for button styling (background, hover effects, color, padding, and shape) */}
           <button
             type="submit"
             className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
