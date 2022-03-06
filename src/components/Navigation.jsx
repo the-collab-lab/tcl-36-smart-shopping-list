@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 // UI for navigation links - Add Item and List View
 export default function Navigation() {
   return (
+    // tailwindcss classes for styling (sticky footer, text, padding, background)
     <nav className="sticky bottom-0 text-center py-4 bg-sky-700">
       <NavLink
         to="/addItemView"

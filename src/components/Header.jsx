@@ -4,10 +4,8 @@ import ListNameCopy from './ListNameCopy';
 import ExitList from './ExitList';
 import { ImCross } from 'react-icons/im';
 
-
 const Header = ({ filter, setFilter, display }) => {
-
-// UI that displays current list name, button to copy list, and navigation options to toggle between list view and add item form
+  // UI that displays current list name, button to copy list, and navigation options to toggle between list view and add item form
   const [isOpen, setIsOpen] = useState(false);
 
   const localToken = localStorage.getItem('list-token');
@@ -18,6 +16,7 @@ const Header = ({ filter, setFilter, display }) => {
   }, []);
 
   return (
+    // tailwindcss classes for styling (flex, text color, sticky header, screen size responsiveness)
     <header className="text-offWhite bg-teal-700 font-DM-Sans sticky top-0 border-b md:flex md:items-center md:justify-between p-4 pb-0 shadow-lg md:pb-4">
       <div className="flex items-center justify-between mb-4 md:mb-0">
         <img

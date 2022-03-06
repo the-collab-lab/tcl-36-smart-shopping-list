@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 // UI displayed to user if a list does not have any items yet
 function Welcome() {
   return (
+    // tailwindcss classes for styling (flex, padding, background colors, responsiveness)
     <>
       <h1 className="font-Karma text-white text-center text-4xl my-4">
         Welcome!

@@ -16,6 +16,7 @@ export default function ListNameCopy({ copyText }) {
     }, 2000);
   };
   return (
+    // tailwindcss classes for styling (flex, text, hover effects)
     <>
       <Toaster />
       <CopyToClipboard text={copyText}>

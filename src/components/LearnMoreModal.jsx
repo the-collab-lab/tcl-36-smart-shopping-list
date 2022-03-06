@@ -36,6 +36,7 @@ export default function Modal() {
   };
 
   return (
+    // tailwindcss classes for styling (flex, text, buttons, focus)
     <>
       <button
         aria-label="open learn more modal"

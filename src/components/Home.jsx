@@ -52,6 +52,7 @@ function Home() {
 
   const joinListForm = () => {
     return (
+      // tailwindcss classes for styling (background, borders, padding, focus, text color)
       <>
         <form className="w-full max-w-sm mt-6 row-start-4 row-span-2">
           <div className="md:flex md:items-center mb-3">

@@ -127,6 +127,7 @@ const ListLayout = ({ items, localToken }) => {
   );
 
   return (
+    // tailwindcss classes for styling (flex, text, screen size responsiveness including hiding table headings on mobile)
     <>
       <Header layoutItems={layoutItems} filter={filter} setFilter={setFilter} />
       <Toaster />
