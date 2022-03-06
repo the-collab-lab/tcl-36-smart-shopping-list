@@ -42,11 +42,13 @@ function ListView() {
       {!isDataLoading && (
         <div className="m-25">
           {items.length ? (
-            <ListLayout
-              items={items}
-              localToken={localToken}
-              loading={isDataLoading}
-            />
+            <>
+              <ListLayout
+                items={items}
+                localToken={localToken}
+                loading={isDataLoading}
+              />
+            </>
           ) : (
             <Welcome />
           )}

@@ -81,7 +81,7 @@ function AddItem() {
   return (
     <>
       <Toaster />
-      <div className="container flex w-1/2 mx-auto p-8 rounded-3xl border-8 border-teal-500 bg-white">
+      <div className="container flex w-3/4 md:w-1/2 mx-auto p-8 rounded-3xl border-8 border-teal-500 bg-white">
         <form method="post">
           <label htmlFor="itemName">Item Name:</label>
           <input
@@ -90,7 +90,7 @@ function AddItem() {
             name="itemName"
             ref={inputRef}
             value={itemName}
-            className="ml-2 mb-4 border rounded"
+            className="md:ml-2 mb-4 border rounded"
             onChange={(e) => setItemName(e.target.value)}
           ></input>
 

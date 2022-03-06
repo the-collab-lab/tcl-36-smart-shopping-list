@@ -54,7 +54,7 @@ function Home() {
     return (
       <>
         <form className="w-full max-w-sm mt-6 row-start-4 row-span-2">
-          <div class="md:flex md:items-center mb-3">
+          <div className="md:flex md:items-center mb-3">
             <div className="md:w-2/3">
               <input
                 className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white"
@@ -69,7 +69,7 @@ function Home() {
               />
             </div>
           </div>
-          <div class="md:flex md:items-center">
+          <div className="md:flex md:items-center">
             <div className="md:w-2/3 space-x-2">
               <button
                 aria-label="submit"
@@ -123,8 +123,8 @@ function Home() {
       <Toaster />
       <div className="mt-12">
         <div className="md:items-center container px-3 mx-auto flex flex-wrap flex-col lg:flex-row items-center justify-between">
-          <div class="grid grid-rows-5 flex-col w-full md:w-1/2 justify-center items-start text-center md:text-left">
-            <h1 class="self-end my-4 text-6xl font-bold leading-tight font-Staatliches">
+          <div className="grid grid-rows-5 flex-col w-full md:w-1/2 justify-center items-start text-center md:text-left">
+            <h1 className="self-end my-4 text-6xl font-bold leading-tight font-Staatliches">
               Smart Shopper
             </h1>
             <p className="leading-normal text-2xl mb-8 font-Staatliches">

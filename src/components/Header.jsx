@@ -8,24 +8,12 @@ const Header = ({ filter, setFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const localToken = localStorage.getItem('list-token');
-  // const [filter, setFilter] = useState('');
   const inputRef = useRef(null);
 
   useEffect(() => {
     inputRef.current.focus();
   }, []);
 
-  //filters items to only display items a user is searching by via the input bar
-  // const filteredItems = layoutItems.filter((item) =>
-  //   item.id.includes(filter.toLowerCase()),
-  // );
-
-  /*
-    <header classNameName="sticky top-0 mx-auto my-4">
-      <h2 className="text-center bg-sky-700 font-Karma text-white text-5xl p-6">
-        Smart Shopper
-      </h2>
-    </header>*/
   return (
     <header className="text-offWhite bg-teal-700 font-DM-Sans sticky top-0 border-b md:flex md:items-center md:justify-between p-4 pb-0 shadow-lg md:pb-4">
       <div className="flex items-center justify-between mb-4 md:mb-0">
@@ -60,9 +48,9 @@ const Header = ({ filter, setFilter }) => {
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             ></path>
           </svg>
         </button>
