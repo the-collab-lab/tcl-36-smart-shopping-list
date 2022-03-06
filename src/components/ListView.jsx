@@ -6,6 +6,7 @@ import Welcome from './Welcome';
 import ListLayout from './ListLayout';
 import Header from './Header';
 
+// UI container for list items - renders ListLayout and handles loading state. Displays welcome prompt if a list is empty, prompting users to start adding items
 function ListView() {
   const [items, setItems] = useState([]);
   //loading is true until list is retrieved from database, this value controls the component rendering

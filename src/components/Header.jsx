@@ -4,7 +4,10 @@ import ListNameCopy from './ListNameCopy';
 import ExitList from './ExitList';
 import { ImCross } from 'react-icons/im';
 
+
 const Header = ({ filter, setFilter, display }) => {
+
+// UI that displays current list name, button to copy list, and navigation options to toggle between list view and add item form
   const [isOpen, setIsOpen] = useState(false);
 
   const localToken = localStorage.getItem('list-token');

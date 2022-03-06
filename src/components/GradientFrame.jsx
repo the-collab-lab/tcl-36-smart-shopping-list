@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Reusable gradient styling used for frames around groups in ListLayout component
 function GradientFrame({ children, colorClass }) {
   return (
     <section

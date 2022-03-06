@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
+// UI for navigation links - Add Item and List View
 export default function Navigation() {
   return (
     <nav className="sticky bottom-0 text-center py-4 bg-sky-700">

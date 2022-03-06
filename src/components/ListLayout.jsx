@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { setUpdateToDb, deleteItemFromDb } from '../lib/firebase';
-// delete button
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { calculateEstimate } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
@@ -9,6 +8,7 @@ import { itemStatusGroups } from '../configuration';
 import Header from './Header';
 import GradientFrame from './GradientFrame';
 
+// UI responsible for filtering and displaying items in correct groups based on calculateEstimate algorithm; also handles updating and deleting items from database
 const ListLayout = ({ items, localToken }) => {
   const [filter, setFilter] = useState(''); //*
   const [layoutItems, setLayoutItems] = useState(items);

@@ -6,6 +6,7 @@ import { getToken } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
 import LearnMoreModal from './LearnMoreModal';
 
+// Landing page for app with buttons to start new list, join list, or open learn more modal
 function Home() {
   const [userToken, setUserToken] = useState('');
   const [showJoinListForm, setShowJoinListForm] = useState(false);
@@ -34,7 +35,6 @@ function Home() {
   };
 
   const handleTokenSubmit = async () => {
-    //create query for token collection in firestore
     const q = query(collection(db, 'token'), where('token', '==', userToken));
 
     const querySnapshot = await getDocs(q);
