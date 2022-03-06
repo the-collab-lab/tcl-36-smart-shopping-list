@@ -4,10 +4,11 @@ import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { getToken } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
+import LearnMoreModal from './LearnMoreModal';
 
 function Home() {
   const [userToken, setUserToken] = useState('');
-
+  const [showJoinListForm, setShowJoinListForm] = useState(false);
   const navigate = useNavigate();
 
   //check for existing token and go to List View if it is there
@@ -49,43 +50,98 @@ function Home() {
     }
   };
 
-  return (
-    <div className="text-center w-3/4 md:w-1/2 mx-auto">
-      <main className="flex flex-col flex-justify items-center text-white p-6 rounded-3xl border-8 border-teal-500">
-        <Toaster />
-        <p className="text-2xl mb-4">Welcome to Smart Shopper.</p>
-        <p className="text-2xl mb-4">The app that learns how you shop!</p>
+  const joinListForm = () => {
+    return (
+      <>
+        <form className="w-full max-w-sm mt-6 row-start-4 row-span-2">
+          <div class="md:flex md:items-center mb-3">
+            <div className="md:w-2/3">
+              <input
+                className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white"
+                id="userToken"
+                name="userToken"
+                value={userToken}
+                onChange={(e) =>
+                  setUserToken(e.target.value.toLocaleLowerCase())
+                }
+                placeholder="Enter Code"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="md:flex md:items-center">
+            <div className="md:w-2/3 space-x-2">
+              <button
+                aria-label="submit"
+                className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+                onClick={handleTokenSubmit}
+                type="button"
+              >
+                Submit
+              </button>
+              <button
+                aria-label="cancel"
+                className="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+                onClick={() => setShowJoinListForm(false)}
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </>
+    );
+  };
+
+  const showButtons = () => {
+    return (
+      <div className="flex">
         <button
-          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold py-1 px-4 border border-gray-400 rounded shadow w-1/2"
+          aria-label="get started button"
+          className="bg-white mr-2 text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
           onClick={handleNewList}
         >
-          Create a New List
+          Get Started
         </button>
-        <div>
-          <p className="mt-10 mb-4 text-2xl">
-            Join an existing list by using its three-word token.
-          </p>
-        </div>
-        <label className="text-xl" htmlFor="userToken">
-          Enter Token:
-        </label>
-        <input
-          type="text"
-          id="userToken"
-          name="userToken"
-          className="w-2/5 text-black"
-          value={userToken}
-          onChange={(e) => setUserToken(e.target.value.toLowerCase())}
-        ></input>
         <button
-          type="submit"
-          className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-semibold mt-4 py-1 px-4 border border-gray-400 rounded shadow w-1/2"
-          disabled={!userToken} //button is disabled until user input an item name
-          onClick={handleTokenSubmit}
+          aria-label="join list button"
+          onClick={() => setShowJoinListForm(true)}
+          className="bg-white mr-2 text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModalScrollable"
         >
-          Join an Existing List
+          Join List
         </button>
-      </main>
+        <LearnMoreModal />
+      </div>
+    );
+  };
+
+  return (
+    <div className="ml-0 leading-normal tracking-normal text-white h-auto">
+      <Toaster />
+      <div className="mt-12">
+        <div className="md:items-center container px-3 mx-auto flex flex-wrap flex-col lg:flex-row items-center justify-between">
+          <div class="grid grid-rows-5 flex-col w-full md:w-1/2 justify-center items-start text-center md:text-left">
+            <h1 class="self-end my-4 text-6xl font-bold leading-tight font-Staatliches">
+              Smart Shopper
+            </h1>
+            <p className="leading-normal text-2xl mb-8 font-Staatliches">
+              Spend less time on lists, and more time shopping smarter.
+            </p>
+            {showButtons()}
+            {showJoinListForm && joinListForm()}
+          </div>
+          <div className="w-full md:w-1/2 py-6 text-center order-first lg:order-last">
+            <img
+              className="w-full md:w-4/5 rounded-3xl shadow-2xl"
+              src="img/shopping-cart-logo.jpg"
+              alt="shopping cart logo"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
