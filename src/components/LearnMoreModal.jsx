@@ -1,5 +1,6 @@
 import React from 'react';
 
+// UI that displays modal for a user that gives brief walkthrough of main features of the app
 export default function Modal() {
   const [showModal, setShowModal] = React.useState(false);
 

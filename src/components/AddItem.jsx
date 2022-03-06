@@ -8,21 +8,18 @@ import { normalizeItemName } from '../utilities';
 import { radioButtonOptions } from '../configuration';
 import Navigation from './Navigation';
 
-//duplicate item? sets isDuplicateFound to true, otherwise false
 //isDuplicateFound boolean gates form submission to database
 async function duplicateCheck(localToken, itemNameNormalized) {
   let isDuplicateFound = false;
-  //create a reference to the item in firestore inside localToken collection
   const itemRef = doc(db, localToken, itemNameNormalized);
-  //send request to get the item
   const docSnap = await getDoc(itemRef);
   if (docSnap.exists()) {
-    //if the item found in the collection .exists() method returns 'true'
     return (isDuplicateFound = true);
   }
   return isDuplicateFound;
 }
 
+// UI to handle adding items to a user's list
 function AddItem() {
   const [itemName, setItemName] = useState('');
   const [frequency, setFrequency] = useState(7);
@@ -60,7 +57,7 @@ function AddItem() {
       return;
     }
     try {
-      // Add a new document/item in collection/localToken under normalized item name  (use it as unique id)
+      // Add a new document/item in collection/localToken under normalized item name
       await setDoc(doc(db, localToken, itemNameNormalized), {
         createdAt: Date.now(),
         itemName,
@@ -96,7 +93,7 @@ function AddItem() {
 
           <fieldset>
             <legend>Choose how soon you will buy this again</legend>
-
+            {/* buttons imported from configuration.js */}
             {radioButtonOptions.map((radioBtn, index) => (
               <div key={index}>
                 <input
@@ -116,7 +113,7 @@ function AddItem() {
           <button
             type="submit"
             className="bg-teal-200 hover:bg-teal-300 text-gray-700 font-bold mt-4 py-1 px-2 rounded"
-            disabled={!itemName} //button is disabled until user input an item name
+            disabled={!itemName} //button iås disabled until user input an item name
             onClick={handleSubmit}
           >
             Add Item

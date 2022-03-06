@@ -4,6 +4,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { HiClipboardCopy } from 'react-icons/hi';
 import { IconContext } from 'react-icons';
 
+// UI component enabling users to copy list name to share with others
 export default function ListNameCopy({ copyText }) {
   const [isCopied, setIsCopied] = useState(false);
 

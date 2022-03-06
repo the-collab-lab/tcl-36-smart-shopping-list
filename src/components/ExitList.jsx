@@ -3,6 +3,7 @@ import { ImExit } from 'react-icons/im';
 import { IconContext } from 'react-icons';
 import { useNavigate } from 'react-router-dom';
 
+// UI to 'log out' a user; clears local storage token to allow a user to return back to home page
 const ExitList = () => {
   const navigate = useNavigate();
 

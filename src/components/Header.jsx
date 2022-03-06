@@ -4,6 +4,7 @@ import ListNameCopy from './ListNameCopy';
 import ExitList from './ExitList';
 import { ImCross } from 'react-icons/im';
 
+// UI that displays current list name, button to copy list, and navigation options to toggle between list view and add item form
 const Header = ({ filter, setFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
 
