@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { getToken } from '@the-collab-lab/shopping-list-utils';
+// import { getToken } from '@the-collab-lab/shopping-list-utils';
 import toast, { Toaster } from 'react-hot-toast';
 import LearnMoreModal from './LearnMoreModal';
+import { ArchivalNoticeModal } from '@the-collab-lab/shopping-list-utils';
 
 // Landing page for app with buttons to start new list, join list, or open learn more modal
 function Home() {
@@ -19,19 +20,20 @@ function Home() {
   }, [navigate]);
 
   const handleNewList = async () => {
-    const token = getToken();
-    localStorage.setItem('list-token', token);
+    console.log('Creating new lists is disabled');
+    // const token = getToken();
+    // localStorage.setItem('list-token', token);
 
     //add token to Firestore under 'token' collection
-    try {
-      const docRef = await addDoc(collection(db, 'token'), {
-        token,
-      });
-      navigate('/listView');
-      console.log('Document written with ID: ', docRef.id);
-    } catch (e) {
-      console.error('Error adding document: ', e);
-    }
+    // try {
+    //   const docRef = await addDoc(collection(db, 'token'), {
+    //     token,
+    //   });
+    //   navigate('/listView');
+    //   console.log('Document written with ID: ', docRef.id);
+    // } catch (e) {
+    //   console.error('Error adding document: ', e);
+    // }
   };
 
   const handleTokenSubmit = async () => {
@@ -143,6 +145,7 @@ function Home() {
           </div>
         </div>
       </div>
+      <ArchivalNoticeModal />
     </div>
   );
 }
